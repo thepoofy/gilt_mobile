@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="assets/stylesheets/jquery.mobile-1.0.min.css" />
+    <link rel="stylesheet" href="assets/stylesheets/jq-mobile-green-button-theme.css" />
+    <link rel="stylesheet" href="assets/stylesheets/main.css" />
+    <script type="text/javascript" src="assets/javascripts/jquery-1.6.4.min.js"></script>
+    <script type="text/javascript" src="assets/javascripts/jquery.mobile-1.0.min.js"></script>
+    <script type="text/javascript" src="assets/javascripts/yqlgeo.js"></script>
+    <script>
+      $('#results').live('pageinit', function(event) {
+
+      var data = "{
+	"id": "0001",
+	"type": "donut",
+	"name": "Cake",
+	"ppu": 0.55,
+	"batters":
+		{
+			"batter":
+				[
+					{ "id": "1001", "type": "Regular" },
+					{ "id": "1002", "type": "Chocolate" },
+					{ "id": "1003", "type": "Blueberry" },
+					{ "id": "1004", "type": "Devil's Food" }
+				]
+		},
+	"topping":
+		[
+			{ "id": "5001", "type": "None" },
+			{ "id": "5002", "type": "Glazed" },
+			{ "id": "5005", "type": "Sugar" },
+			{ "id": "5007", "type": "Powdered Sugar" },
+			{ "id": "5006", "type": "Chocolate with Sprinkles" },
+			{ "id": "5003", "type": "Chocolate" },
+			{ "id": "5004", "type": "Maple" }
+		]
+        }"
+        $('#dude').attr('data-json', data);
+
+        var obj = jQuery.parseJSON($('#dude').attr('data-json'));
+        alert(obj.name);
+        });
+    </script>
+  </head>
+  <body>
+    <div id="results" data-role="page">
+      <div data-role="header">
+        <a href="index.html" data-rel="back" data-theme="a">Back</a>
+        <h1>Search Results</h1>
+      </div>
+      <div id="content" data-role="content">
+        <ul id="dude" data-json="" data-role="listview" data-inset="true" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
+          <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-corner-top ui-btn-up-c">
+            <a href="index.html" class="ui-link-inherit">
+              <h3 class="ui-li-heading">Far East Kitchen - Thai 2 Park Ave 2 Park Ave</h3>
+	      <p class="ui-li-desc"><strong>2 Park Ave, New York NY 10016 </strong></p>
+              <p class="ui-li-desc">People Here Now: 39</p>
+              <p class="ui-li-desc"><strong>.1</strong> miles</p>
+	    </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>

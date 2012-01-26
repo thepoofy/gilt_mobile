@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  
+  <title>Gwumpy</title>
+  
+  <link rel="stylesheet" href="assets/stylesheets/jquery.mobile-1.0.min.css" />
+  <link rel="stylesheet" href="assets/stylesheets/jq-mobile-green-button-theme.css" />
+  <link rel="stylesheet" href="assets/stylesheets/main.css" />
+  <link rel="shortcut icon" href="assets/stylesheets/images/twitter-gwumpy.png" />
+  <script type="text/javascript" src="assets/javascripts/jquery-1.6.4.min.js"></script>
+  <script type="text/javascript" src="assets/javascripts/jquery.mobile-1.0.min.js"></script>
+  <script type="text/javascript" src="assets/javascripts/yqlgeo.js"></script>
+  <script type="text/javascript" src="assets/javascripts/gwumpy.js"></script>
+  <script>
+	var hasGeoLocation = false;
+  
+	$('#splash').bind('pageshow', function(){
+		initiate_geolocation();
+	});
+	
+  	$('#splash').live('pagecreate', function(event)
+   	{
+  		$('#btnInit').attr('disabled', true);
+  		initiate_geolocation();
+		
+    	$('#btnInit').click( function(event)
+    	{
+    		if(hasGeoLocation)
+    		{
+    			$.mobile.changePage('#homepage', {
+        			transition: 'slide'
+        		});
+    		}
+    		else
+    		{
+				$.mobile.changePage("#onError", {
+					transition: 'slide',
+					
+				});
+    		}
+    	});
+    });
+	
+    $('#homepage').live('pagecreate', function(event)
+	{
+    	if(!isLocationFound())
+    	{
+    		initiate_geolocation();
+    	}
+    	
+		$('#search').click( function(event) 
+		{
+			event.preventDefault();
+			
+			$("#search_form_search_term").val("");
+			
+			callVenueSearch();
+      });
+		
+		$("#venueSearchForm").submit(function(event){
+			event.preventDefault();
+			
+			$("#search_form_search_term").val($("#venueSearchField").val());
+			$("#search_form_standard").val("1");
+			
+			callVenueSearch();
+			
+			$.mobile.changePage('#results', {
+				transition: 'slide'
+			});
+			
+			return false;
+		});
+    });
+    $('#homepage').bind('pageshow', function(){
+		initiate_geolocation();
+	});
+    
+    $('#results').live('pagecreate', function(event) {
+    	$("#venueSearchForm").submit(function(event){
+			event.preventDefault();
+			
+			$("#searchTerm").val($("#venueSearchField").val());
+			
+			callVenueSearch();
+			
+			return false;
+		});
+    });
+    
+    
+    
+    function callVenueSearch()
+    {
+    	var form_data = $('form#search_form').serialize();
+        $.ajax({
+         url: "/gwumpy/search",
+         data: form_data,
+         dataType: 'json',
+         beforeSend: function()
+         {
+        	 $.mobile.loadingMessage = "soo hungwy...";
+        	 $.mobile.showPageLoadingMsg();
+         },
+         complete: function()
+         {
+        	 $.mobile.hidePageLoadingMsg();
+         },
+         success: function(data) 
+         {
+        	$("#results_list").empty();
+        	
+			if(data.status === 200 && data.data !== null && data.data.length > 0)
+			{
+				$.each(data.data, function(i, venue) 
+				{
+					$(createListItem(venue)).appendTo("#results_list");
+				});
+        	}
+        	else
+         	{
+        		var list_data = '<li><h3>No data found.</h3></li>';
+        		$(list_data).appendTo("#results_list");
+         	}
+			
+			$.mobile.changePage('#results', {
+				transition: 'slide'
+			});
+			
+			$('#results_list').listview('refresh');
+         }
+        });
+    }
+	
+    
+    function handle_geolocation_query(position) 
+    {
+		onGeoLocationEnabled();
+
+		$.mobile.loadPage('#onSuccess');
+		$('#onSuccess #latitude').val(position.coords.latitude);                                                                                     
+		$('#onSuccess #longitude').val(position.coords.longitude);
+		$('#onSuccess #accuracy').val(position.coords.accuracy);
+		
+		$('#homepage #search_form #latitude').val($('#onSuccess #latitude').val());
+		$('#homepage #search_form #longitude').val($('#onSuccess #longitude').val());
+		$('#homepage #search_form #accuracy').val($('#onSuccess #accuracy').val());
+		
+		$.mobile.loadPage('#results');
+    }
+    
+    
+    function isLocationFound()
+    {
+    	return ($('#homepage #search_form #latitude').val() && $('#homepage #search_form #longitude').val() && $('#homepage #search_form #accuracy').val());
+    }
+    
+    function createListItem(venue)
+    {
+    	var li = create('li');
+    	//var anchor = create('a');
+    	//anchor.attr('href','#details');
+    	
+    	
+    	//anchor.append(create('img')
+		li.append(create('img')    			
+        		.attr('src',venue.categoryImgUrl)
+				.addClass('ui-li-thumb')
+				.addClass('categoryIcon')
+        	);
+    	
+    	var gridLayout = create('div');
+    	//gridLayout.addClass('ui-grid-a');
+    	
+    	var leftCol = create('div');
+    	//leftCol.addClass('ui-block-a');
+    	/*
+    	var rightCol = create('div')
+    		.addClass('ui-block-b')
+    		.addClass('alignRight');
+    	*/
+    	leftCol.append(create('h3')
+    		//.addClass('venueName')
+    		.text(venue.name));//+' - '+venue.category));
+    	leftCol.append(create('p')
+    		.text(venue.address+' ('+venue.distance+' meters)'));
+    	leftCol.append(create('p')
+           	.text('People Checked In: '+venue.hereNowCount));
+    	//leftCol.append(create('p')
+        //	.text(venue.distance+' meters'));
+    	
+    	
+    	if(venue.healthCodeRating)
+    	{
+    		var rightCol = create('div').addClass('ratingBox'); 
+    		rightCol.append(create('span')
+                //.text('Health Code Rating: ')
+                .append(create('strong')
+                		.addClass('healthCode')
+                		.addClass(function(){
+                			if('A' === venue.healthCodeRating)
+                			{
+                				return 'healthCode-a';
+                			}
+                			if('B' === venue.healthCodeRating)
+                			{
+                				return 'healthCode-b';
+                			}
+                			if('C' === venue.healthCodeRating)
+                			{
+                				return 'healthCode-c';
+                			}
+                		}).text(venue.healthCodeRating)));	
+    		rightCol.append(create('span')
+                //.text('Violations at last Inspection: ')
+                .append(create('strong').addClass('violations').text(venue.healthCodeViolations)));
+    		
+    		li.append(rightCol);
+    	}
+    	
+    	
+    	gridLayout.append(leftCol);
+    	
+    	
+    	
+    	
+    	
+    	
+    	//gridLayout.append(rightCol);
+    	
+    	//anchor.append(gridLayout);
+    	li.append(gridLayout);
+    	//li.append(anchor);
+    	
+    	return li;
+    }
+
+
+    function initiate_geolocation() 
+    {
+      if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(handle_geolocation_query, handle_errors, {timeout: 10000});
+      } else {
+        yqlgeo.get('visitor', normalize_yql_response);
+      }
+    }
+
+    function onGeoLocationEnabled()
+    {
+    	//alert("success");
+    	hasGeoLocation = true;
+    	
+    	$('#btnInit').attr('disabled', false);
+    	try
+    	{
+    		$('#btnInit').button('enable');
+    	}
+    	catch(e){}
+    	
+    	$('#search').attr('disabled', false);
+    	
+    	try
+    	{
+    		$('#search').button('enable');
+    	}
+    	catch(e){}
+    }
+
+    function handle_errors(error){}
+
+    function normalize_yql_response(response) {
+      if (response.error) {
+        var error = { code : 0 };
+        handle_error(error);
+        return;
+      }
+
+    	var position = {
+            coords : {
+              latitude: response.place.centroid.latitude,
+              longitude: response.place.centroid.longitude,
+              accuracy: response.place.centroid.accuracy
+            },
+            address : {
+              city: response.place.locality2.content,
+              region: response.place.admin1.content,
+              country: response.place.country.content
+            }
+    	};
+
+    	handle_geolocation_query(position);
+    }
+
+    function create(domType)
+    {
+    	return $(document.createElement(domType));
+    }
+
+    function createText(text)
+    {
+    	return $(document.createTextNode(text));
+    }
+    
+</script>
+  </head>
+  <body>
+    <div id="splash" data-role="page">
+    	<div data-role="header">
+	    	<div class="ui-grid-b" style="padding:4px;">
+				<div class="ui-block-a" align="left">
+					<!-- <a href="#homepage" data-icon="back" data-role="button" data-rel="back" data-theme="a">Back</a>-->
+				</div>  
+				<h2 class="ui-block-b" align="center">Gwumpy</h2>
+				<div class="ui-block-c" align="right">
+			        <!-- 
+			        	<form id="venueSearchForm" name="venueSearch" action="" method="post">
+			        		<label for="venueSearchField" class="ui-hidden-accessible">Search</label>
+			        		<input id="venueSearchField" type="search" data-inline="true" data-icon="search" placeholder="Search" />
+			        	</form>
+			         -->
+				</div>
+			</div>
+		</div>
+      <div data-role="content">
+        <div align="center"><img src="assets/stylesheets/images/gwumpy.png"/></div>
+        
+        <button id="btnInit" data-theme="g" disabled="disabled">I'm hungry!</button>
+      </div>
+    </div>
+	<div id="homepage" data-role="page">
+		<div data-role="header">
+	      	<div class="ui-grid-b" style="padding:4px;">
+		      	<div class="ui-block-a" align="left"><a href="#splash" data-icon="back" data-role="button" data-rel="back" data-theme="a">Back</a></div>
+		        <h2 class="ui-block-b" align="center">Gwumpy</h2>
+		        <div class="ui-block-c" align="right">
+		        	<form id="venueSearchForm" name="venueSearch" action="" method="post">
+		        		<label for="venueSearchField" class="ui-hidden-accessible">Search</label>
+		        		<input id="venueSearchField" type="search" data-inline="true" data-icon="search" placeholder="Search" />
+		        	</form>
+		        </div>
+	      	</div>
+		</div>
+		<div data-role="content">
+	        <form name="search_form" id="search_form">
+	          <label for="category" class="select">I'm Craving:</label>
+	          <select id="craving" data-theme="d" name="category">
+	            <option value="restaurants">ANYTHING!</option>
+	            <option value="american">American</option>
+	            <option value="french">French</option>
+	            <option value="italian">Italian</option>
+	            <option value="japanese">Japanese</option>
+	            <option value="mexican">Mexican</option>
+	            <option value="pizza">Pizza</option>
+	            <option value="thai">Thai</option>
+	          </select>
+	          <!-- 
+	          <label for="price" class="select">I'm Willing to Spend:</label>
+	          <select data-theme="d" name="price">
+	            <option value="4">As much as I need to</option>
+	            <option value="3">A decent amount</option>
+	            <option value="2">A little bit</option>
+	            <option value="1">What I Found in My Pocket</option>
+	          </select>
+	          -->
+	          <label for="standard" class="select">How clean should my food be?</label>
+	          <select data-theme="d" name="standard" id="search_form_standard">
+	            <option value="3">Spotless</option>
+	            <option value="2">A little floor salt</option>
+	            <option value="1">Roaches are a delicacy</option>
+	          </select>
+	           
+	          <input id="latitude" type="hidden" name="lat" value="" />
+	          <input id="longitude" type="hidden" name="lng" value="" />
+	          <input id="accuracy" type="hidden" name="llAcc" value="" />
+	          <input id="search_form_search_term" type="hidden" name="searchTerm" value="" />
+	          <br/>
+	          <button id="search" data-theme="g" disabled="disabled">Feed the Gwump!</button>
+	    	</form>
+		</div>
+		<div data-role="footer" data-position="fixed">
+			<h3><img style="width:300px" src="/assets/stylesheets/images/poweredByFoursquare_white.png" alt="Powered By Foursquare"/></h3>
+		</div>
+	</div>
+    <div id="onError" data-role="page">
+   	  
+      <div data-role="header">
+      	<a href="#splash" data-icon="back" data-rel="back" data-theme="a">Back</a>
+      	<h1>Oops...</h1>
+      </div>
+      <div data-role="content">
+        <p>Gwumpy could not determine your location for some reason. Make sure you give us permission by changing your browser settings or try again later.</p>
+      </div>
+    </div>
+    <div id="onGeoDenied" data-role="page">
+      <div data-role="header">
+      	<a href="#splash" data-icon="back" data-rel="back" data-theme="a">Back</a>
+      	<h1>Oops...</h1>
+      </div>
+      <div data-role="content">
+        <p>Gwumpy needs access to your location to find nearby places to eat.</p>
+        <button></button>
+      </div>
+    </div>
+    <div id="onSuccess" data-role="page">
+      <form>
+        <input id="latitude" type="hidden" name="latitude" value="" />
+        <input id="longitude" type="hidden" name="longitude" value="" />
+        <input id="accuracy" type="hidden" name="llAcc" value="" />
+      </form>
+    </div>
+    <div id="results" data-role="page">
+    	<div data-role="header">
+	      	<div class="ui-grid-b" style="padding:4px;">
+		      	<div class="ui-block-a" align="left"><a href="#homepage" data-icon="back" data-role="button" data-rel="back" data-theme="a">Back</a></div>
+		        <h2 class="ui-block-b" align="center">Gwumpy</h2>
+		        <!-- 
+		        <div class="ui-block-c" align="right">
+		        	<form id="venueSearchForm" name="venueSearch" action="" method="post">
+		        		<label for="venueSearchField" class="ui-hidden-accessible">Search</label>
+		        		<input id="venueSearchField" type="search" data-inline="true" data-icon="search" placeholder="Search" />
+		        	</form>
+		        </div>
+		         -->
+	      	</div>
+		</div>
+		
+      <div data-role="content">
+      	<ul id="results_list" data-role="listview"></ul>
+      </div>
+    </div>
+    <div id="details" data-role="page">
+      <div data-role="header">
+        <a href="#results" data-icon="back" data-rel="back" data-theme="a">Back</a>
+        <h1>Details</h1>
+      </div>
+      <div id="content" data-role="content">
+        <div data-role="collapsible-set">
+          <div data-role="collapsible" data-collapsed="false">
+            <h3>New York Times</h3>
+            <p>Restaurant Reviews</p>
+          </div>
+          <div data-role="collapsible" data-collapsed="true">
+            <h3>Grade</h3>
+            <p>NYC Restaurant Heath Grades</p>
+          </div>
+          <div data-role="collapsible" data-collapsed="true">
+            <h3>Google Maps</h3>
+            <p>Need Directions?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="details" data-role="page">
+      <div data-role="header">
+        <a href="index.html" data-rel="back" data-theme="a">Back</a>
+        <h1>Details</h1>
+      </div>
+      <div id="content" data-role="content">
+        <div data-role="collapsible-set">
+          <div data-role="collapsible" data-collapsed="false">
+            <h3>New York Times</h3>
+            <p>Restaurant Reviews</p>
+          </div>
+          <div data-role="collapsible" data-collapsed="true">
+	    <h3>Grade</h3>
+	    <p>NYC Restaurant Heath Grades</p>
+	  </div>
+	  <div data-role="collapsible" data-collapsed="true">
+	    <h3>Google Maps</h3>
+	    <p>Need Directions?</p>
+	  </div>
+	</div>
+      </div>
+    </div>
+  </body>
+</html>

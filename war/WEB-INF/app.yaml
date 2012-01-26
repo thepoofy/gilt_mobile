@@ -1,0 +1,55 @@
+application: gwumpymobile
+version: beta
+runtime: java
+
+
+handlers:
+- url: /gwumpy/search
+  name: GwumpySearchServlet
+  servlet: com.thepoofy.gwumpy.servlet.GwumpySearch
+- url: /gwumpy/details
+  name: GwumpyDetailsServlet
+  servlet: com.thepoofy.gwumpy.servlet.GwumpyDetails
+
+- url: /gwumpy/qasearch
+  name: QASearch
+  servlet: com.thepoofy.gwumpy.servlet.GwumpyQASearch
+
+- url: /gwumpy/yelpsearch
+  name: YelpSearch
+  servlet: com.thepoofy.gwumpy.servlet.YelpSearch
+
+- url: /RestaurantGradeUpload
+  name: RestaurantGradeUpload
+  servlet: com.thepoofy.gwumpy.servlet.NycRestaurantUpload
+
+- url: /tasks/*
+  login: admin
+
+- url: /tasks/updateNycGradeVenueId
+  name: UpdateNycGradeVenueIdTask
+  servlet: com.thepoofy.gwumpy.servlet.tasks.UpdateNycGradeVenueIdTask
+
+- url: /tasks/updateNycGradeLocation
+  name: UpdateNycGradeLocationTask
+  servlet: com.thepoofy.gwumpy.servlet.tasks.UpdateNycGradeLocationTask
+
+threadsafe: true
+
+welcome_files:
+  - index.html
+
+static_files:
+  - include: /**.png
+  - include: /**.css
+  - include: /**.js
+  - include: /**.html
+  
+#system_properties:
+  #myapp.maximum-message-length: 140
+  #myapp.notify-every-n-signups: 1000
+  #myapp.notify-url: http://www.example.com/signupnotify
+#env_variables:
+#  DEFAULT_ENCODING: UTF-8
+#context_params:
+#  rack.env: production
