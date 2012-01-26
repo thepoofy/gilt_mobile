@@ -37,14 +37,16 @@
     
     function loadCategories()
     {
+    	$.mobile.loadingMessage = "Loading categories for today's sales.";
+		$.mobile.showPageLoadingMsg();
+    	
     	$.ajax({
          url: "/api/categories",
          //data: {cagegory: category},
          dataType: 'json',
          beforeSend: function()
          {
-			$.mobile.loadingMessage = "Loading categories for today's sales.";
-			$.mobile.showPageLoadingMsg();
+			
          },
          complete: function()
          {

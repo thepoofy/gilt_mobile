@@ -64,6 +64,9 @@ public enum ClothingCategory {
 			{
 				return cat;
 			}
+			if(cat.name.equals(name)){
+				return cat;
+			}
 			if(cat.searchText.equals(name)){
 				return cat;
 			}
