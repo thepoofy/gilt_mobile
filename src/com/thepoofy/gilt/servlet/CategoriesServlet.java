@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.thepoofy.gilt.servlet;
 
@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.thepoofy.gilt.ClothingCategory;
 import com.thepoofy.gilt.GiltProperty;
+import com.thepoofy.gilt.api.DataSingleton;
 import com.thepoofy.gilt.api.GiltDao;
 import com.thepoofy.gilt.api.SaleMemcache;
 import com.williamvanderhoef.gilt.model.Sale;
@@ -22,19 +23,19 @@ import com.williamvanderhoef.gilt.model.Sale;
  *
  */
 @SuppressWarnings("serial")
-public class CategoriesServlet<T> extends ServletBase
+public class CategoriesServlet extends ServletBase
 {
 	private static final Logger log = Logger.getLogger(CategoriesServlet.class.getName());
-	
+
 	protected void handleResponse(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException
 	{
 		try
 		{
-			SaleMemcache cache = new SaleMemcache();
+			SaleMemcache cache = DataSingleton.INSTANCE.getCache();
 			List<Sale> sales = cache.getLatest(GiltProperty.MEN);
-			
+
 			GiltDao dao = new GiltDao(sales);
-			
+
 			doResponse(dao.getCategoriesCount(), response);
 		}
 		catch(Throwable t)

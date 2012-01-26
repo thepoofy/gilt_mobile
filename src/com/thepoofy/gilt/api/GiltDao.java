@@ -45,7 +45,11 @@ public class GiltDao {
 		{
 			brandsCount = Collections.emptyList();
 			categoriesCount = Collections.emptyList();
+		}
 
+		if(sales == null)
+		{
+			return;
 		}
 
 		for(Sale s : sales)
@@ -61,7 +65,6 @@ public class GiltDao {
 					categoriesLogic(p, categories);
 				}
 			}
-
 		}
 
 		brandsCount = new ArrayList<BrandCount>();
