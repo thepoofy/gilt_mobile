@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.thepoofy.gilt.GiltProperty;
 import com.williamvanderhoef.gilt.model.Sale;
 
 public class SaleMemcache

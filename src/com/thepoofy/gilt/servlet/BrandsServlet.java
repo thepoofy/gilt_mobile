@@ -11,8 +11,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.thepoofy.gilt.GiltProperty;
 import com.thepoofy.gilt.api.GiltDao;
-import com.thepoofy.gilt.api.GiltProperty;
 import com.thepoofy.gilt.api.SaleMemcache;
 import com.williamvanderhoef.gilt.model.Sale;
 

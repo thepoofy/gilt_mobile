@@ -8,9 +8,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.thepoofy.gilt.ClothingCategory;
 import com.thepoofy.gilt.model.BrandCount;
 import com.thepoofy.gilt.model.CategoryCount;
-import com.thepoofy.gilt.model.ClothingCategory;
 import com.williamvanderhoef.gilt.model.Product;
 import com.williamvanderhoef.gilt.model.Sale;
 

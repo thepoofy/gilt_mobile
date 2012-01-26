@@ -1,4 +1,4 @@
-package com.thepoofy.gilt.api;
+package com.thepoofy.gilt;
 
 public enum GiltProperty {
 

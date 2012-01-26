@@ -1,4 +1,4 @@
-package com.thepoofy.gilt.model;
+package com.thepoofy.gilt;
 
 
 public enum ClothingCategory {
