@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -15,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
-
-import org.apache.commons.codec.binary.Base64;
 
 import com.google.appengine.api.urlfetch.HTTPHeader;
 import com.google.appengine.api.urlfetch.HTTPMethod;
@@ -29,28 +26,7 @@ public class URLUtil
 {
 	private static final Logger log = Logger.getLogger(URLUtil.class.getName());
 	
-	/**
-	 * 
-	 * @param query
-	 */
-	public static String callAuthenticated(URL query, String username, String password) throws IOException
-	{
-		HttpURLConnection conn = (HttpURLConnection)query.openConnection();
-		
-		try
-		{
-			setBasicAuth(conn, username, password);
-			
-			return processStream(conn.getInputStream());
-		}
-		catch(IOException ioe)
-		{
-			ioe.printStackTrace(System.err);
-			
-			return processStream(conn.getErrorStream());
-		}
-		
-	}
+	
 	
 	private static String processStream(InputStream is) throws IOException
 	{
@@ -70,36 +46,6 @@ public class URLUtil
 	
 	
 	
-    /**
-     * adapted from: http://stackoverflow.com/questions/1341081/using-http-basic-auth-with-google-app-engine-urlfetch-service
-     * 
-     * Preemptively set the Authorization header to use Basic Auth.
-     * @param connection The HTTP connection
-     * @param username Username
-     * @param password Password
-     */
-    private static void setBasicAuth(HttpURLConnection connection, String username, String password) 
-    {
-        StringBuilder buf = new StringBuilder(username);
-        buf.append(':');
-        buf.append(password);
-        byte[] bytes = null;
-        try 
-        {
-        	bytes = buf.toString().getBytes("ISO-8859-1");
-        } 
-        catch (java.io.UnsupportedEncodingException uee) 
-        {
-        	assert false;
-        }
-
-        String header = "Basic " + Base64.encodeBase64(bytes);
-        connection.setRequestProperty("Authorization", header);
-        
-        connection.setRequestProperty("User-Agent", "gwumpy");
-    }
-
-	
 	/**
 	 * Takes advantage of the Googe App Engine Fetch Service
 	 * @param uri
@@ -115,9 +61,9 @@ public class URLUtil
 			log.info("Loading: "+uri);
 			
 			HTTPRequest request = new HTTPRequest(new URL(uri), method);
-			request.setHeader(new HTTPHeader("User-Agent", "gwumpy.com beta"));
+//			request.setHeader(new HTTPHeader("User-Agent", ""));
 			
-			request.getFetchOptions().setDeadline(10.0);
+			request.getFetchOptions().setDeadline(20.0);
 			
 			HTTPResponse res = fetcher.fetch(request);
 			
@@ -127,7 +73,8 @@ public class URLUtil
 			
 			if (res.getResponseCode() == 200)
 			{
-				results = new String(res.getContent(),"UTF-8"); 
+				results = new String(res.getContent(),"UTF-8");
+				log.info(results);
 			}
 			else
 			{

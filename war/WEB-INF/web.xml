@@ -1,44 +1,28 @@
 <!-- Generated from app.yaml. Do not edit. -->
 <web-app version='2.5' xmlns='http://java.sun.com/xml/ns/javaee'>
   <servlet>
-    <servlet-name>GwumpySearchServlet</servlet-name>
-    <servlet-class>com.thepoofy.gwumpy.servlet.GwumpySearch</servlet-class>
+    <servlet-name>BrandsServlet</servlet-name>
+    <servlet-class>com.thepoofy.gilt.servlet.BrandsServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>GwumpySearchServlet</servlet-name>
-    <url-pattern>/gwumpy/search</url-pattern>
+    <servlet-name>BrandsServlet</servlet-name>
+    <url-pattern>/api/brands</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>GwumpyDetailsServlet</servlet-name>
-    <servlet-class>com.thepoofy.gwumpy.servlet.GwumpyDetails</servlet-class>
+    <servlet-name>CategoriesServlet</servlet-name>
+    <servlet-class>com.thepoofy.gilt.servlet.CategoriesServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>GwumpyDetailsServlet</servlet-name>
-    <url-pattern>/gwumpy/details</url-pattern>
+    <servlet-name>CategoriesServlet</servlet-name>
+    <url-pattern>/api/categories</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>QASearch</servlet-name>
-    <servlet-class>com.thepoofy.gwumpy.servlet.GwumpyQASearch</servlet-class>
+    <servlet-name>ProductsServlet</servlet-name>
+    <servlet-class>com.thepoofy.gilt.servlet.ProductsServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>QASearch</servlet-name>
-    <url-pattern>/gwumpy/qasearch</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>YelpSearch</servlet-name>
-    <servlet-class>com.thepoofy.gwumpy.servlet.YelpSearch</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>YelpSearch</servlet-name>
-    <url-pattern>/gwumpy/yelpsearch</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>RestaurantGradeUpload</servlet-name>
-    <servlet-class>com.thepoofy.gwumpy.servlet.NycRestaurantUpload</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>RestaurantGradeUpload</servlet-name>
-    <url-pattern>/RestaurantGradeUpload</url-pattern>
+    <servlet-name>ProductsServlet</servlet-name>
+    <url-pattern>/api/products</url-pattern>
   </servlet-mapping>
   <security-constraint>
     <web-resource-collection>
@@ -49,20 +33,12 @@
     </auth-constraint>
   </security-constraint>
   <servlet>
-    <servlet-name>UpdateNycGradeVenueIdTask</servlet-name>
-    <servlet-class>com.thepoofy.gwumpy.servlet.tasks.UpdateNycGradeVenueIdTask</servlet-class>
+    <servlet-name>UpdateSalesServlet</servlet-name>
+    <servlet-class>com.thepoofy.gilt.servlet.tasks.UpdateSalesServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>UpdateNycGradeVenueIdTask</servlet-name>
-    <url-pattern>/tasks/updateNycGradeVenueId</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>UpdateNycGradeLocationTask</servlet-name>
-    <servlet-class>com.thepoofy.gwumpy.servlet.tasks.UpdateNycGradeLocationTask</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>UpdateNycGradeLocationTask</servlet-name>
-    <url-pattern>/tasks/updateNycGradeLocation</url-pattern>
+    <servlet-name>UpdateSalesServlet</servlet-name>
+    <url-pattern>/tasks/update_sales</url-pattern>
   </servlet-mapping>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
