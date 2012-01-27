@@ -10,8 +10,15 @@
 
 .priceRange{
 	text-align:right;
-	font-size: 2em;
+	font-size: 1.6em;
 	padding-right:5px;
+}
+.priceBox{
+	float:right;
+	width:60px;
+	position: absolute;
+	right:20px;
+	top: 34%;
 }
 
 /*
@@ -19,12 +26,7 @@
 	text-align:right;
 }
 
-.ratingBox{
-	float:right;
-	margin-left:10px;
-	padding-right:10px;
-	width:40px;
-}
+
 .healthCode{
 	font-size:3.0em;
 }

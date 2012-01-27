@@ -9,30 +9,22 @@
   <title>Gilt ReGrouper</title>
   
   <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile.structure-1.0.min.css" /> 
-  <link rel="stylesheet" href="assets/stylesheets/gilt_regrouper.min.css" />
-  <link rel="stylesheet" href="assets/stylesheets/main.css" />
+  <link rel="stylesheet" href="assets2/stylesheets/gilt_regrouper.min.css" />
+  <link rel="stylesheet" href="assets2/stylesheets/main.css" />
   
-  <script type="text/javascript" src="assets/javascripts/jquery-1.6.4.min.js"></script>
-  <script type="text/javascript" src="assets/javascripts/jquery.mobile-1.0.min.js"></script>
+  <script type="text/javascript" src="assets2/javascripts/jquery-1.6.4.min.js"></script>
+  <script type="text/javascript" src="assets2/javascripts/jquery.mobile-1.0.min.js"></script>
   
   <script>
 	
-	$('#categories').live('pagecreate', function(event)
+	$('#categories').live('pageinit', function(event)
    	{
   		loadCategories();
     });
 	
-    $('#products').live('pagecreate', function(event) {
-    	$("#venueSearchForm").submit(function(event){
-			event.preventDefault();
-			
-			$("#searchTerm").val($("#venueSearchField").val());
-			
-			callVenueSearch();
-			
-			return false;
-		});
-    });
+    /* $('#products').live('pageinit', function(event) {
+    	callProductSearch();
+    }); */
     
     
     function loadCategories()
@@ -171,24 +163,24 @@
 				.addClass('categoryIcon')
         	);
     	
-    	var gridLayout = create('div');
-    	gridLayout.addClass('ui-grid-a');
-    	
-    	var leftCol = create('div');
-    	leftCol.addClass('ui-block-a');
-    	leftCol.append(create('h3').addClass('productBrand').append(createText(product.brand)))
-    	leftCol.append(create('h4').addClass('productName').append(createText(product.name)));
-    	
-    	
-    	var rightCol = create('div');
-    	rightCol.addClass('ui-block-b');
-    	rightCol.append(create('h3').addClass('priceRange').append(createText(findPriceRange(product))));
-    	
-    	gridLayout.append(leftCol);
-    	gridLayout.append(rightCol);
-    	
-    	anchor.append(gridLayout);
+    	var contentDiv = create('div');
+    	contentDiv.append(create('h3').addClass('productBrand').append(createText(product.brand)))
+    	contentDiv.append(create('h4').addClass('productName').append(createText(product.name)));
 
+    	
+    	var priceDiv = create('div')
+			.addClass("priceBox");
+	
+		priceDiv.append(create('span')
+			.addClass('priceRange')
+			.append(createText(findPriceRange(product))));
+	
+		anchor.append(priceDiv);
+
+    	
+    	anchor.append(contentDiv);
+    	
+    	
     	li.append(anchor);
     	
     	return li;
