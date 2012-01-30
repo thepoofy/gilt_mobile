@@ -22,6 +22,6 @@ public class Constants
 
 	
 	//Gilt
-	public static final String GILT_API_URL= "https://api.gilt.com/v1/sales/men/active.json";
+	public static final String GILT_API_URL= "https://api.gilt.com/v1/";
 	public static final String GILT_ACCESS_TOKEN = "2a79c53507fe657d88a685380bf46021";
 }

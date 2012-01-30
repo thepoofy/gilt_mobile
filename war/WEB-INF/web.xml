@@ -33,12 +33,20 @@
     </auth-constraint>
   </security-constraint>
   <servlet>
+    <servlet-name>UpdateCacheServlet</servlet-name>
+    <servlet-class>com.thepoofy.gilt.servlet.tasks.UpdateCacheServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UpdateCacheServlet</servlet-name>
+    <url-pattern>/tasks/update_cache</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>UpdateSalesServlet</servlet-name>
-    <servlet-class>com.thepoofy.gilt.servlet.tasks.UpdateSalesServlet</servlet-class>
+    <servlet-class>com.thepoofy.gilt.servlet.tasks.UpdateSaleServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>UpdateSalesServlet</servlet-name>
-    <url-pattern>/tasks/update_sales</url-pattern>
+    <url-pattern>/tasks/update_sale</url-pattern>
   </servlet-mapping>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>

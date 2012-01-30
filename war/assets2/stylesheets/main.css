@@ -1,57 +1,18 @@
-
-
-
-
-
 .categoryIcon{
 	padding-top:3px;
 	padding-left:3px;
 }
-
 .priceRange{
 	text-align:right;
-	font-size: 1.6em;
-	padding-right:5px;
+	font-size: 1.4em;
+	padding-right:0px;
 }
 .priceBox{
-	float:right;
-	width:60px;
 	position: absolute;
-	right:20px;
+	right:32px;
 	top: 34%;
 }
-
-/*
-.alignRight{
-	text-align:right;
+.ui-li-heading{
+	white-space: normal!important;
+	margin: 0 0 .4em 0 !important;
 }
-
-
-.healthCode{
-	font-size:3.0em;
-}
-.violations{
- 	font-size:1.5em;
-}
-
-.healthCode-a{
- 	color:blue;
-}
-.healthCode-b{
- 	color:green;
-}
-.healthCode-c{
- 	color:orange;
-}
-
-h3{
-	padding:0px;
-}
- 	
-.venueName{
-	font-size:1.5em;
-	padding: 0px 0px 0px 0px;
-}
-
-*/
- 	

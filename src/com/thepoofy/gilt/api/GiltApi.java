@@ -11,6 +11,7 @@ import org.codehaus.jackson.map.PropertyNamingStrategy;
 import org.codehaus.jackson.type.TypeReference;
 
 import com.thepoofy.constants.Constants;
+import com.thepoofy.gilt.GiltProperty;
 import com.thepoofy.util.KeyValuePair;
 import com.thepoofy.util.URLUtil;
 import com.williamvanderhoef.gilt.model.Sale;
@@ -24,20 +25,27 @@ public class GiltApi {
 
 	private static final Logger log = Logger.getLogger(GiltApi.class.getName());
 
+	
+	private static String buildSaleUrl(GiltProperty prop)
+	{
+		String url = Constants.GILT_API_URL+"sales/"+prop.getDivisionKey()+"/active.json";
+		
+		return url;
+	}
 
 	/**
 	 *
 	 * @return
 	 * @throws GiltApiException
 	 */
-	public static List<Sale> fetchSales() throws GiltApiException
+	public static List<Sale> fetchSales(GiltProperty prop) throws GiltApiException
 	{
 		List<KeyValuePair> params = new ArrayList<KeyValuePair>();
 
 		params.add(new KeyValuePair("apikey", Constants.GILT_ACCESS_TOKEN));
 		params.add(new KeyValuePair("product_detail", "true"));
 
-		String response = URLUtil.doGet(Constants.GILT_API_URL, params);
+		String response = URLUtil.doGet(buildSaleUrl(prop), params);
 		if(response == null)
 		{
 			log.warning("GiltApi response was null.");

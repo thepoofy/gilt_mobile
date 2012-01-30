@@ -4,7 +4,6 @@
 package com.thepoofy.gilt.servlet.tasks;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,9 +18,9 @@ import com.thepoofy.gilt.servlet.ServletBase;
  *
  */
 @SuppressWarnings("serial")
-public class UpdateSalesServlet extends ServletBase
+public class UpdateSaleServlet extends ServletBase
 {
-	private static final Logger log = Logger.getLogger(UpdateSalesServlet.class.getName());
+//	private static final Logger log = Logger.getLogger(UpdateSalesServlet.class.getName());
 	
 	
 	/**
@@ -34,8 +33,10 @@ public class UpdateSalesServlet extends ServletBase
 	{
 		try
 		{
+			String propertyName = getParameter(request, "prop", true);
+			
 			SaleMemcache cache = new SaleMemcache();
-			cache.forceUpdate(GiltProperty.MEN);
+			cache.forceUpdate(GiltProperty.valueOf(propertyName));
 			
 			doResponse(null, response);
 		}

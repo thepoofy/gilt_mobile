@@ -6,10 +6,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.thepoofy.gilt.GiltProperty;
-import com.thepoofy.util.URLUtil;
 import com.williamvanderhoef.gilt.model.Sale;
 
 public class SaleMemcache
@@ -77,7 +74,7 @@ public class SaleMemcache
 	{
 		try
 		{
-			List<Sale> freshData = GiltApi.fetchSales();
+			List<Sale> freshData = GiltApi.fetchSales(saleType);
 
 			onSaleUpdate(saleType, freshData);
 

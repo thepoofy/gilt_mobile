@@ -1,5 +1,5 @@
 application: giltregrouper
-version: beta
+version: beta2
 runtime: java
 
 
@@ -18,10 +18,14 @@ handlers:
 
 - url: /tasks/*
   login: admin
+  
+- url: /tasks/update_cache
+  name: UpdateCacheServlet
+  servlet: com.thepoofy.gilt.servlet.tasks.UpdateCacheServlet
 
-- url: /tasks/update_sales
+- url: /tasks/update_sale
   name: UpdateSalesServlet
-  servlet: com.thepoofy.gilt.servlet.tasks.UpdateSalesServlet
+  servlet: com.thepoofy.gilt.servlet.tasks.UpdateSaleServlet
 
 
 threadsafe: true
