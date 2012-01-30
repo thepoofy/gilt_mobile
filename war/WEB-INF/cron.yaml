@@ -1,4 +1,4 @@
 cron:
 - description: hourly job to update sales found on Gilt
   url: /tasks/update_cache
-  schedule: every 1 hours 00:00
+  schedule: every 1 hours
