@@ -16,7 +16,7 @@ import com.thepoofy.gilt.GiltProperty;
  *
  */
 @SuppressWarnings("serial")
-public class GiltPropertiesServlet extends ServletBase
+public class GiltSitesServlet extends ServletBase
 {
 //	private static final Logger log = Logger.getLogger(GiltPropertiesServlet.class.getName());
 

@@ -5,7 +5,6 @@ package com.thepoofy.gilt.servlet;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,14 +23,16 @@ import com.williamvanderhoef.gilt.model.Sale;
 @SuppressWarnings("serial")
 public class BrandsServlet extends ServletBase
 {
-	private static final Logger log = Logger.getLogger(BrandsServlet.class.getName());
+//	private static final Logger log = Logger.getLogger(BrandsServlet.class.getName());
 
 	protected void handleResponse(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException
 	{
 		try
 		{
+			String siteName = getParameter(request, "site", true);
+			
 			SaleMemcache cache = DataSingleton.INSTANCE.getCache();
-			List<Sale> sales = cache.getLatest(GiltProperty.MEN);
+			List<Sale> sales = cache.getLatest(GiltProperty.valueOf(siteName));
 
 			GiltDao dao = new GiltDao(sales);
 

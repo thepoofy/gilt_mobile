@@ -12,14 +12,20 @@
   <link rel="stylesheet" href="assets2/stylesheets/gilt_regrouper.min.css" />
   <link rel="stylesheet" href="assets2/stylesheets/main.css" />
   
+  <script type="text/javascript" src="assets2/javascripts/jquery.cookie.js"></script>
   <script type="text/javascript" src="assets2/javascripts/jquery-1.6.4.min.js"></script>
   <script type="text/javascript" src="assets2/javascripts/jquery.mobile-1.0.min.js"></script>
   
   <script>
 	
+	$('#sites').live('pageinit', function(event)
+	{
+		loadSites();
+	});
+
 	$('#categories').live('pageinit', function(event)
    	{
-  		loadCategories();
+  	//	loadCategories();
     });
 	
     /* $('#products').live('pageinit', function(event) {
@@ -27,19 +33,58 @@
     }); */
     
     
-    function loadCategories()
+
+    function loadSites()
+    {
+    	$.mobile.loadingMessage = "Loading available sites.";
+		$.mobile.showPageLoadingMsg();
+    	
+		$.ajax({
+         url: "/api/sites",
+         dataType: 'json',
+         complete: function()
+         {
+        	 $.mobile.hidePageLoadingMsg();
+         },
+         success: function(data) 
+         {
+        	$("#sites_list").empty();
+        	
+			if(data.status === 200 && data.data !== null && data.data.length > 0)
+			{
+				$.each(data.data, function(i, site) 
+				{
+					$(createSiteListItem(site)).appendTo("#sites_list");
+				});
+        	}
+        	else
+         	{
+        		var list_data = '<li><h3>No sites available.</h3></li>';
+        		$(list_data).appendTo("#sites_list");
+         	}
+			
+			$.mobile.changePage('#sites', {
+				transition: 'slide'
+			});
+			
+			$('#sites_list').listview('refresh');
+         }
+        });
+    }
+    
+    
+    function loadCategories(site)
     {
     	$.mobile.loadingMessage = "Loading categories for today's sales.";
 		$.mobile.showPageLoadingMsg();
     	
+		$("#searchSite").val(site);
+				
+		var formData = $('#searchForm').serialize();
     	$.ajax({
          url: "/api/categories",
-         //data: {cagegory: category},
+         data: formData,
          dataType: 'json',
-         beforeSend: function()
-         {
-			
-         },
          complete: function()
          {
         	 $.mobile.hidePageLoadingMsg();
@@ -61,7 +106,7 @@
         		$(list_data).appendTo("#categories_list");
          	}
 			
-			$.mobile.changePage('#results', {
+			$.mobile.changePage('#categories', {
 				transition: 'slide'
 			});
 			
@@ -74,16 +119,17 @@
     
     function callProductSearch(category)
     {
+    	$.mobile.loadingMessage = "Loading products for "+category;
+		$.mobile.showPageLoadingMsg();
+		
+		$("#searchCategory").val(category);
+		
     	//alert("searching for "+category);
+    	var formData = $('#searchForm').serialize();
     	$.ajax({
          url: "/api/products",
-         data: {category: category},
+         data: formData,
          dataType: 'json',
-         beforeSend: function()
-         {
-			$.mobile.loadingMessage = "Loading products for "+category;
-			$.mobile.showPageLoadingMsg();
-         },
          complete: function()
          {
         	 $.mobile.hidePageLoadingMsg();
@@ -114,6 +160,43 @@
         });
     }
 	
+    function createSiteListItem(site){
+		var li = create('li');
+    	
+    	/*
+    	li.append(create('span')
+    			.addClass('ul-li-count')
+    			.append(createText(categoryCount.count)));
+    	*/
+    	
+    	var anchor = create('a');
+    	anchor.append(create('h4')
+    			.append(createText(site.label)));
+    	
+    	/*
+    	anchor.append(create('img')    			
+        		.attr('src',categoryCount.img)
+				.addClass('ui-li-thumb')
+				.addClass('categoryIcon')
+        	);
+    	*/
+    	/*
+    	anchor.append(create('h3')
+    			.append(createText(categoryCount.count+" starting at $"+categoryCount.minPrice)));
+    	*/
+    	anchor.click(function(event){
+    		event.preventDefault();
+			
+    		loadCategories(site.name);
+    		
+    		return false;
+    	});
+    	
+    	li.append(anchor);
+    	
+    	return li;
+    }
+    
     function createCategoryListItem(categoryCount)
     {
     	var li = create('li');
@@ -228,12 +311,28 @@
 
     function createText(text)
     {
-    	return $(document.createTextNode(text));
+    	return $("<span>"+text+"</span>");
     }
     
 </script>
   </head>
   <body>
+    
+    <div id="sites" data-role="page" data-theme="a">
+		<div data-role="header">
+	      	<!-- <a data-icon="back" data-role="button" data-rel="back" data-theme="a" style="float: left;">Back</a>  -->
+	      	<h1>Gilt ReGrouper</h1>
+	      	
+		</div>
+		
+		<div data-role="content">
+			<ul id="sites_list" data-role="listview"></ul>
+		</div>
+		
+		<div data-role="footer" data-position="fixed">
+			<h3>powered by Gilt Groupe</h3>
+		</div>
+	</div>
     
 	<div id="categories" data-role="page" data-theme="a">
 		<div data-role="header">
@@ -308,6 +407,10 @@
 		</div>
     </div>
     
+    <form id="searchForm">
+    	<input type="hidden" id="searchSite" name="site" />
+    	<input type="hidden" id="searchCategory" name="category" />
+    </form>
         
    
 </body>

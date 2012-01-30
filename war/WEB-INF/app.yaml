@@ -4,6 +4,9 @@ runtime: java
 
 
 handlers:
+- url: /api/sites
+  name: GiltSitesServlet
+  servlet: com.thepoofy.gilt.servlet.GiltSitesServlet
 - url: /api/brands
   name: BrandsServlet
   servlet: com.thepoofy.gilt.servlet.BrandsServlet

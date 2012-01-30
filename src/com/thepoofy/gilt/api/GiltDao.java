@@ -99,13 +99,9 @@ public class GiltDao {
 	{
 		for(ClothingCategory cat : ClothingCategory.values())
 		{
-			if((p.getName() != null
-					&& p.getName().contains(cat.searchText))
-				||
-				(p.getContent() != null
-					&& p.getContent().getDescription() != null
-					&& p.getContent().getDescription().contains(cat.searchText))
-				)
+			if((matches(cat.searchText, p.getName())))
+//				|| (p.getContent() != null
+//					&& matches(cat.searchText, p.getContent().getDescription())))
 			{
 				CategoryCount bc = null;
 
@@ -175,6 +171,25 @@ public class GiltDao {
 		categoryBuckets.put(cat, products);
 	}
 
+	
+	private static boolean matches(String key, String text)
+	{
+		String[] words = text.split("\\s|\\.");
+		
+		for(String word : words)
+		{
+			if(word.toLowerCase().equals(key))
+			{
+				System.out.println("Word: "+key+" found in '"+text+"'");
+				
+				return true;
+			}
+		}
+		
+		return false;
+//		return (text != null 
+//				&& text.contains(key));
+	}
 
 
 	/**

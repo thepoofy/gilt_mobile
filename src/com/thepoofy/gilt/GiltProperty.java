@@ -1,10 +1,13 @@
 package com.thepoofy.gilt;
 
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+@JsonSerialize(using = GiltPropertySerializer.class)
 public enum GiltProperty {
 
 	WOMEN("women", "Women"),
 	MEN("men", "Men"),
-	HOME("home", "Home"),
+	//HOME("home", "Home"),
 	KIDS("kids", "Children");
 	
 	private final String label;
@@ -29,6 +32,5 @@ public enum GiltProperty {
 	public String getDivisionKey() {
 		return divisionKey;
 	}
-	
 	
 }

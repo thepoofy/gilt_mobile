@@ -24,7 +24,8 @@ public enum ClothingCategory {
 	TROUSERS("Trousers"),
 	CHINOS("Chinos"),
 	JEANS("Jeans"),
-
+	BOARDSHORTS("Boardshorts"),
+	
 	BOOTS("Boots"),
 	SNEAKERS("Sneakers"),
 
@@ -34,21 +35,28 @@ public enum ClothingCategory {
 
 	TOTE_BAG("Tote Bags", "tote bag"),
 	MESSENGER_BAG("Messenger Bags", "messenger bag"),
+	
+	SET("Sets")
 	;
 
 	public final String name;
 	public final String searchText;
+	public GiltProperty[] sites;
 
-	private ClothingCategory(String name)
+	private ClothingCategory(String name, GiltProperty ...sites )
 	{
 		this.name = name;
 		this.searchText = name().toLowerCase();
+		
+		this.sites = sites;
 	}
 
-	private ClothingCategory(String name, String key)
+	private ClothingCategory(String name, String key, GiltProperty ...sites)
 	{
 		this.name = name;
 		searchText = key;
+		
+		this.sites = sites;
 	}
 
 
