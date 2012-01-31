@@ -1,6 +1,5 @@
 package com.thepoofy.gilt.api;
 
-import com.thepoofy.gilt.GiltProperty;
 
 public enum DataSingleton {
 
@@ -10,8 +9,6 @@ public enum DataSingleton {
 
 	private DataSingleton(){
 		cache = new SaleMemcache();
-
-		cache.forceUpdate(GiltProperty.MEN);
 	}
 
 	/**

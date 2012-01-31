@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.thepoofy.gilt.GiltProperty;
+import com.thepoofy.gilt.api.DataSingleton;
 import com.thepoofy.gilt.api.SaleMemcache;
 import com.thepoofy.gilt.servlet.ServletBase;
 
@@ -35,10 +36,11 @@ public class UpdateSaleServlet extends ServletBase
 		{
 			String propertyName = getParameter(request, "prop", true);
 			
-			SaleMemcache cache = new SaleMemcache();
+			SaleMemcache cache = DataSingleton.INSTANCE.getCache();
+			
 			cache.forceUpdate(GiltProperty.valueOf(propertyName));
 			
-			doResponse(null, response);
+			doResponse(true, response);
 		}
 		catch(Throwable t)
 		{

@@ -1,5 +1,6 @@
 package com.thepoofy.gilt.api;
 
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,8 @@ public class SaleMemcache
 		}
 
 
+		try
+		{
 //		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 
 //		@SuppressWarnings("unchecked")
@@ -63,6 +66,13 @@ public class SaleMemcache
 //		{
 //			return cachedData;
 //		}
+		}
+		catch(GiltApiException e)
+		{
+			log.log(Level.WARNING, e.getMessage(), e);
+			e.printStackTrace();
+			return Collections.emptyList();
+		}
 	}
 
 	/**
@@ -70,24 +80,14 @@ public class SaleMemcache
 	 * @param saleType
 	 * @return
 	 */
-	public List<Sale> forceUpdate(GiltProperty saleType)
+	public List<Sale> forceUpdate(GiltProperty saleType) throws GiltApiException
 	{
-		try
-		{
-			List<Sale> freshData = GiltApi.fetchSales(saleType);
+		List<Sale> freshData = GiltApi.fetchSales(saleType);
 
-			onSaleUpdate(saleType, freshData);
+		onSaleUpdate(saleType, freshData);
 
-			return freshData;
-		}
-		catch(Exception e)
-		{
-			log.log(Level.WARNING, e.getMessage(), e);
-			e.printStackTrace();
-//			WootLogger.severe(e);
-		}
-
-		return null;
+		return freshData;
+		
 	}
 
 //
