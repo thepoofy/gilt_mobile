@@ -12,10 +12,9 @@
   <link rel="stylesheet" href="assets3/stylesheets/gilt_regrouper.min.css" />
   <link rel="stylesheet" href="assets3/stylesheets/main.css" />
   
-  <script type="text/javascript" src="assets3/javascripts/jquery.cookie.js"></script>
   <script type="text/javascript" src="assets3/javascripts/jquery-1.6.4.min.js"></script>
   <script type="text/javascript" src="assets3/javascripts/jquery.mobile-1.0.min.js"></script>
-  
+  <script type="text/javascript" src="assets3/javascripts/jquery.cookie.js"></script>
   <script>
 	
 	$('#sites').live('pageinit', function(event)
@@ -25,15 +24,15 @@
 
 	$('#categories').live('pageinit', function(event)
    	{
-  	//	loadCategories();
-    });
+		loadCategories();
+  	});
 	
-    /* $('#products').live('pageinit', function(event) {
-    	callProductSearch();
-    }); */
+	$('#products').live('pageinit', function(event)
+   	{
+		callProductSearch();
+  	});
+	
     
-    
-
     function loadSites()
     {
     	$.mobile.loadingMessage = "Loading available sites.";
@@ -78,7 +77,15 @@
     	$.mobile.loadingMessage = "Loading categories for today's sales.";
 		$.mobile.showPageLoadingMsg();
     	
-		$("#searchSite").val(site);
+		if(site != null)
+		{
+			$("#searchSite").val(site);
+			$.cookie("searchSite", site, {expires: 7, path: '/'});
+		}
+		else
+		{
+			$("#searchSite").val($.cookie("searchSite"));
+		}
 				
 		var formData = $('#searchForm').serialize();
     	$.ajax({
@@ -111,6 +118,10 @@
 			});
 			
 			$('#categories_list').listview('refresh');
+         },
+         error: function()
+         {
+        	 alert('error');
          }
         });
     }
@@ -123,6 +134,17 @@
 		$.mobile.showPageLoadingMsg();
 		
 		$("#searchCategory").val(category);
+		
+		if(category != null)
+		{
+			$("#searchCategory").val(category);
+			$.cookie("searchCategory", category, {expires: 7, path: '/'});
+		}
+		else
+		{
+			$("#searchSite").val($.cookie("searchSite"));
+			$("#searchCategory").val($.cookie("searchCategory"));
+		}
 		
     	//alert("searching for "+category);
     	var formData = $('#searchForm').serialize();
@@ -241,8 +263,8 @@
     	anchor.attr('href',product.url);
     	
     	anchor.append(create('img')    			
-        		.attr('src',product.imageUrls[0])
-				.addClass('ui-li-thumb')
+        		.attr('src',product.imageUrls["91x121"][0])
+        		.addClass('ui-li-thumb')
 				.addClass('categoryIcon')
         	);
     	

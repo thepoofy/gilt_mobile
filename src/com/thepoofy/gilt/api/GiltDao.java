@@ -107,7 +107,7 @@ public class GiltDao {
 
 				if(!categories.containsKey(cat.name))
 				{
-					bc = new CategoryCount(cat.name, p.getImageUrls().get(0));
+					bc = new CategoryCount(cat.name, p.getImageUrls().get("91x121").get(0));
 
 				}
 				else if(categories.containsKey(cat.name))

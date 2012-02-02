@@ -16,4 +16,9 @@ public class GiltApiException extends Exception {
 	{
 		super(reason);
 	}
+	
+	public GiltApiException(String reason, Exception e)
+	{
+		super(reason, e);
+	}
 }

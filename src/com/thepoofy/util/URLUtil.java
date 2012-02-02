@@ -57,6 +57,8 @@ public class URLUtil
 
 			request.getFetchOptions().setDeadline(20.0);
 
+			log.info(request.getURL().toExternalForm());
+			
 			HTTPResponse res = fetcher.fetch(request);
 
 			if (res.getResponseCode() == 200)

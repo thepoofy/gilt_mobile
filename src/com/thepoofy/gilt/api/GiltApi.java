@@ -6,15 +6,16 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.PropertyNamingStrategy;
-import org.codehaus.jackson.type.TypeReference;
 
 import com.thepoofy.constants.Constants;
 import com.thepoofy.gilt.GiltProperty;
 import com.thepoofy.util.KeyValuePair;
 import com.thepoofy.util.URLUtil;
 import com.williamvanderhoef.gilt.model.Sale;
+import com.williamvanderhoef.gilt.responses.SalesResponse;
 
 /**
  *
@@ -45,7 +46,8 @@ public class GiltApi {
 		params.add(new KeyValuePair("apikey", Constants.GILT_ACCESS_TOKEN));
 		params.add(new KeyValuePair("product_detail", "true"));
 
-		String response = URLUtil.doGet(buildSaleUrl(prop), params);
+		String url = buildSaleUrl(prop);
+		String response = URLUtil.doGet(url, params);
 		if(response == null)
 		{
 			log.warning("GiltApi response was null.");
@@ -57,30 +59,36 @@ public class GiltApi {
 
 		mapper.setPropertyNamingStrategy(new PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy());
 
-		List<Sale> sales;
+		SalesResponse salesResponse;
 
 		try
 		{
-			TypeReference<List<Sale>> typeRef = new TypeReference<List<Sale>>(){};
-
-			sales = mapper.readValue(response, typeRef);
+			salesResponse = mapper.readValue(response, SalesResponse.class);
+		}
+		catch(JsonMappingException e)
+		{
+			log.log(Level.SEVERE, "Failed parsing response: "+response);
+			log.log(Level.SEVERE, "Failed calling: "+url+"\t"+e.getMessage(), e);
+			throw new GiltApiException("Response couldn't be parsed for Gilt Api", e);
 		}
 		catch(IOException e)
 		{
-			log.log(Level.SEVERE, e.getMessage(), e);
+			log.log(Level.SEVERE, "Failed parsing response: "+response);
+			log.log(Level.SEVERE, "Failed calling: "+url);
+			log.log(Level.SEVERE, "Failed calling: "+url+"\t"+e.getMessage(), e);
 
-			throw new GiltApiException("Response couldn't be parsed for Gilt Api");
+			throw new GiltApiException("Response couldn't be parsed for Gilt Api", e);
 		}
 
-		if(sales == null)
+		if(salesResponse == null || salesResponse.getSales() == null)
 		{
-			log.warning("GiltApi response was null.");
+			log.warning("GiltApi response was empty.");
 
 			throw new GiltApiException("Response was null");
 		}
 
 
-		return sales;
+		return salesResponse.getSales();
 	}
 
 
