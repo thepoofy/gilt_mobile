@@ -9,6 +9,8 @@ import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.thepoofy.gilt.ClothingCategory;
 import com.thepoofy.gilt.model.BrandCount;
@@ -17,8 +19,10 @@ import com.williamvanderhoef.gilt.model.Product;
 import com.williamvanderhoef.gilt.model.Sale;
 import com.williamvanderhoef.gilt.model.Sku;
 
-public class GiltDao {
-
+public class GiltDao 
+{
+	private static final Logger log = Logger.getLogger(GiltDao.class.getName());
+	
 	private List<BrandCount> brandsCount;
 	private List<CategoryCount> categoriesCount;
 	private final Map<ClothingCategory, List<Product>> categoryBuckets;
@@ -143,7 +147,7 @@ public class GiltDao {
 					}
 					catch(ParseException e)
 					{
-						e.printStackTrace(System.err);
+						log.log(Level.WARNING, e.getMessage(), e);
 					}
 				}
 
@@ -184,7 +188,6 @@ public class GiltDao {
 			{
 				if(key.equals(word.toLowerCase()))
 				{
-					System.out.println("Word: "+key+" found in '"+text+"'");
 					return true;
 				}
 			}
