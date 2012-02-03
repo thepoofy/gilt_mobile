@@ -56,7 +56,7 @@ public enum ClothingCategory {
 	TOTE_BAG("Tote Bags", "tote bag"),
 	MESSENGER_BAG("Messenger Bags", "messenger bag"),
 
-	SET("Sets")
+	SET("Sets"),
 	;
 
 	public final String name;
