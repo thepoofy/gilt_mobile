@@ -147,8 +147,10 @@ public class GiltDao {
 					}
 				}
 
-
 				categories.put(cat.name, bc);
+
+				//return here to prevent a product from falling into a catch-all category
+				return;
 			}
 		}
 	}
@@ -171,21 +173,23 @@ public class GiltDao {
 		categoryBuckets.put(cat, products);
 	}
 
-	
-	private static boolean matches(String key, String text)
+
+	private static boolean matches(List<String> keys, String text)
 	{
 		String[] words = text.split("\\s|\\.");
-		
+
 		for(String word : words)
 		{
-			if(word.toLowerCase().equals(key))
+			for(String key : keys)
 			{
-//				System.out.println("Word: "+key+" found in '"+text+"'");
-				
-				return true;
+				if(key.equals(word.toLowerCase()))
+				{
+					System.out.println("Word: "+key+" found in '"+text+"'");
+					return true;
+				}
 			}
 		}
-		
+
 		return false;
 	}
 	
