@@ -107,7 +107,7 @@ public class GiltDao {
 
 				if(!categories.containsKey(cat.name))
 				{
-					bc = new CategoryCount(cat.name, p.getImageUrls().get("91x121").get(0));
+					bc = new CategoryCount(cat.name, findProductImage(p));
 
 				}
 				else if(categories.containsKey(cat.name))
@@ -180,17 +180,21 @@ public class GiltDao {
 		{
 			if(word.toLowerCase().equals(key))
 			{
-				System.out.println("Word: "+key+" found in '"+text+"'");
+//				System.out.println("Word: "+key+" found in '"+text+"'");
 				
 				return true;
 			}
 		}
 		
 		return false;
-//		return (text != null 
-//				&& text.contains(key));
 	}
+	
+	private static final String SMALL_IMAGE_SIZE = "91x121";
 
+	private static String findProductImage(Product p)
+	{
+		return p.getImageUrls().get(SMALL_IMAGE_SIZE).get(0).getUrl();
+	}
 
 	/**
 	 * @return the brandsCount
