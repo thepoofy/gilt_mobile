@@ -13,19 +13,28 @@ import java.util.Map;
 import com.thepoofy.gilt.ClothingCategory;
 import com.thepoofy.gilt.model.BrandCount;
 import com.thepoofy.gilt.model.CategoryCount;
+import com.thepoofy.gilt.model.ProductDetails;
 import com.williamvanderhoef.gilt.model.Product;
 import com.williamvanderhoef.gilt.model.Sale;
-import com.williamvanderhoef.gilt.model.Sku;
 
+/**
+ *
+ * @author wvanderhoef
+ *
+ */
 public class GiltDao {
 
 	private List<BrandCount> brandsCount;
 	private List<CategoryCount> categoriesCount;
-	private final Map<ClothingCategory, List<Product>> categoryBuckets;
+	private final Map<ClothingCategory, List<ProductDetails>> categoryBuckets;
 
+	/**
+	 *
+	 * @param sales
+	 */
 	public GiltDao(List<Sale> sales)
 	{
-		categoryBuckets = new EnumMap<ClothingCategory, List<Product>>(ClothingCategory.class);
+		categoryBuckets = new EnumMap<ClothingCategory, List<ProductDetails>>(ClothingCategory.class);
 
 		init(sales);
 
@@ -54,15 +63,22 @@ public class GiltDao {
 
 		for(Sale s : sales)
 		{
-			List<Product> products = s.getProducts();
+			List<String> productUrls = s.getProducts();
 
-			if(products != null)
+			if(productUrls != null)
 			{
-				for(Product p : products)
+				for(String productUrl : productUrls)
 				{
-					brandsLogic(p, brands);
+					Product p = DataSingleton.INSTANCE.getProductCache().getLatest(productUrl);
 
-					categoriesLogic(p, categories);
+					ProductDetails pd = ProductDetails.valueOf(p);
+
+					if(pd != null)
+					{
+						brandsLogic(pd, brands);
+
+						categoriesLogic(pd, categories);
+					}
 				}
 			}
 		}
@@ -75,9 +91,9 @@ public class GiltDao {
 
 	}
 
-	private void brandsLogic(Product p, Map<String, BrandCount> brands)
+	private void brandsLogic(ProductDetails p, Map<String, BrandCount> brands)
 	{
-		String brand = p.getBrand();
+		String brand = p.getBrandName();
 
 		if(brand != null && !brands.containsKey(brand))
 		{
@@ -95,19 +111,17 @@ public class GiltDao {
 		}
 	}
 
-	private void categoriesLogic(Product p, Map<String, CategoryCount> categories)
+	private void categoriesLogic(ProductDetails p, Map<String, CategoryCount> categories)
 	{
 		for(ClothingCategory cat : ClothingCategory.values())
 		{
-			if((matches(cat.searchText, p.getName())))
-//				|| (p.getContent() != null
-//					&& matches(cat.searchText, p.getContent().getDescription())))
+			if((matches(cat.searchText, p.getProductName())))
 			{
 				CategoryCount bc = null;
 
 				if(!categories.containsKey(cat.name))
 				{
-					bc = new CategoryCount(cat.name, p.getImageUrls().get("91x121").get(0));
+					bc = new CategoryCount(cat.name, p.getImageUrl());
 
 				}
 				else if(categories.containsKey(cat.name))
@@ -119,32 +133,31 @@ public class GiltDao {
 
 				addProductToBucket(cat, p);
 
-
-				for(Sku sku : p.getSkus())
+				if(bc.getMinPrice() == null && p.getMinPrice() != null)
 				{
-					try
+					bc.setMinPrice(p.getMinPrice());
+				}
+
+				try
+				{
+					NumberFormat format = NumberFormat.getInstance();
+					Number minPrice = NumberFormat.getInstance().parse(p.getMinPrice());
+
+					//minimum price logic
+					if(bc.getMinPrice() != null)
 					{
-						NumberFormat format = NumberFormat.getInstance();
-						Number skuPrice = NumberFormat.getInstance().parse(sku.getSalePrice());
+						Number categoryMinPrice = format.parse(bc.getMinPrice());
 
-						if(bc.getMinPrice() != null)
+						if(minPrice.doubleValue() < categoryMinPrice.doubleValue())
 						{
-							Number minPrice = format.parse(bc.getMinPrice());
-
-							if(skuPrice.doubleValue() < minPrice.doubleValue())
-							{
-								bc.setMinPrice(sku.getSalePrice());
-							}
-						}
-						else
-						{
-							bc.setMinPrice(sku.getSalePrice());
+							bc.setMinPrice(p.getMinPrice());
 						}
 					}
-					catch(ParseException e)
-					{
-						e.printStackTrace(System.err);
-					}
+				}
+				catch(ParseException e)
+				{
+					//TODO correct logger
+					e.printStackTrace();
 				}
 
 				categories.put(cat.name, bc);
@@ -156,16 +169,16 @@ public class GiltDao {
 	}
 
 
-	private void addProductToBucket(ClothingCategory cat, Product p)
+	private void addProductToBucket(ClothingCategory cat, ProductDetails p)
 	{
-		List<Product> products ;
+		List<ProductDetails> products ;
 		if(categoryBuckets.containsKey(cat))
 		{
 			products = categoryBuckets.get(cat);
 		}
 		else
 		{
-			products = new ArrayList<Product>();
+			products = new ArrayList<ProductDetails>();
 		}
 
 		products.add(p);
@@ -207,9 +220,11 @@ public class GiltDao {
 		return categoriesCount;
 	}
 	/**
-	 * @return the categoryBuckets
+	 *
+	 * @param category
+	 * @return list of products
 	 */
-	public List<Product> getCategoryBuckets(ClothingCategory category) {
+	public List<ProductDetails> getCategoryBuckets(ClothingCategory category) {
 		return categoryBuckets.get(category);
 	}
 }

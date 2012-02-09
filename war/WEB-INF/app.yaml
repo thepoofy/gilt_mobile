@@ -30,6 +30,10 @@ handlers:
   name: UpdateSalesServlet
   servlet: com.thepoofy.gilt.servlet.tasks.UpdateSaleServlet
 
+- url: /tasks/update_product
+  name: UpdateProductServlet
+  servlet: com.thepoofy.gilt.servlet.tasks.UpdateProductServlet
+
 
 threadsafe: true
 

@@ -11,6 +11,11 @@ public class CategoryCount extends Counter{
 	private String minPrice;
 	private String maxPrice;
 
+	/**
+	 *
+	 * @param name
+	 * @param imageUrl
+	 */
 	public CategoryCount(String name, String imageUrl)
 	{
 		super(name);
