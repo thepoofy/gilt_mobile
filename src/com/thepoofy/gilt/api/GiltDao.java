@@ -1,7 +1,5 @@
 package com.thepoofy.gilt.api;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -9,7 +7,6 @@ import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.thepoofy.gilt.ClothingCategory;
@@ -71,17 +68,23 @@ public class GiltDao {
 
 			if(productUrls != null)
 			{
-				for(String productUrl : productUrls)
+//				for(String productUrl : productUrls)
+				for(int i=0; i<productUrls.size() && i< 2; ++i)
 				{
+					String productUrl = productUrls.get(i);
 					Product p = DataSingleton.INSTANCE.getProductCache().getLatest(productUrl);
 
 					ProductDetails pd = ProductDetails.valueOf(p);
 
 					if(pd != null)
 					{
-						brandsLogic(pd, brands);
+						//brandsLogic(pd, brands);
 
 						categoriesLogic(pd, categories);
+					}
+					else
+					{
+						System.out.println("ProductDetails null");
 					}
 				}
 			}
@@ -121,48 +124,48 @@ public class GiltDao {
 		{
 			if((matches(cat.searchText, p.getProductName())))
 			{
-				CategoryCount bc = null;
+				CategoryCount categoryCount = null;
 
 				if(!categories.containsKey(cat.name))
 				{
-					bc = new CategoryCount(cat.name, p.getImageUrl());
+					categoryCount = new CategoryCount(cat.name, p.getImageUrl());
 				}
 				else if(categories.containsKey(cat.name))
 				{
-					bc = categories.get(cat.name);
+					categoryCount = categories.get(cat.name);
 				}
 
-				++bc.count;
+				++categoryCount.count;
 
 				addProductToBucket(cat, p);
+//
+//				if(categoryCount.getMinPrice() == null && p.getMinPrice() != null)
+//				{
+//					categoryCount.setMinPrice(p.getMinPrice());
+//				}
+//
+//				try
+//				{
+//					NumberFormat format = NumberFormat.getInstance();
+//					Number minPrice = NumberFormat.getInstance().parse(p.getMinPrice());
+//
+//					//minimum price logic
+//					if(categoryCount.getMinPrice() != null)
+//					{
+//						Number categoryMinPrice = format.parse(categoryCount.getMinPrice());
+//
+//						if(minPrice.doubleValue() < categoryMinPrice.doubleValue())
+//						{
+//							categoryCount.setMinPrice(p.getMinPrice());
+//						}
+//					}
+//				}
+//				catch(ParseException e)
+//				{
+//					log.log(Level.WARNING, e.getMessage(), e);
+//				}
 
-				if(bc.getMinPrice() == null && p.getMinPrice() != null)
-				{
-					bc.setMinPrice(p.getMinPrice());
-				}
-
-				try
-				{
-					NumberFormat format = NumberFormat.getInstance();
-					Number minPrice = NumberFormat.getInstance().parse(p.getMinPrice());
-
-					//minimum price logic
-					if(bc.getMinPrice() != null)
-					{
-						Number categoryMinPrice = format.parse(bc.getMinPrice());
-
-						if(minPrice.doubleValue() < categoryMinPrice.doubleValue())
-						{
-							bc.setMinPrice(p.getMinPrice());
-						}
-					}
-				}
-				catch(ParseException e)
-				{
-					log.log(Level.WARNING, e.getMessage(), e);
-				}
-
-				categories.put(cat.name, bc);
+				categories.put(cat.name, categoryCount);
 
 				//return here to prevent a product from falling into a catch-all category
 				return;

@@ -37,51 +37,49 @@ public class ProductDetails {
 		pd.setProductName(p.getName());
 
 		pd.setImageUrl(findProductImage(p));
-
-		for(Sku sku : p.getSkus())
-		{
-			try
-			{
-				NumberFormat format = NumberFormat.getInstance();
-				Number skuPrice = NumberFormat.getInstance().parse(sku.getSalePrice());
-
-				//minimum price logic
-				if(pd.getMinPrice() != null)
-				{
-					Number minPrice = format.parse(pd.getMinPrice());
-
-					if(skuPrice.doubleValue() < minPrice.doubleValue())
-					{
-						pd.setMinPrice(sku.getSalePrice());
-					}
-				}
-				else
-				{
-					pd.setMinPrice(sku.getSalePrice());
-				}
-
-				//maximum price logic
-				if(pd.getMaxPrice() != null)
-				{
-					Number maxPrice = format.parse(pd.getMaxPrice());
-
-					if(skuPrice.doubleValue() > maxPrice.doubleValue())
-					{
-						pd.setMaxPrice(sku.getSalePrice());
-					}
-				}
-				else
-				{
-					pd.setMaxPrice(sku.getSalePrice());
-				}
-			}
-			catch(ParseException e)
-			{
-				e.printStackTrace(System.err);
-			}
-		}
-
-		pd.setMaxPrice("");
+//
+//		for(Sku sku : p.getSkus())
+//		{
+//			try
+//			{
+//				NumberFormat format = NumberFormat.getInstance();
+//				Number skuPrice = NumberFormat.getInstance().parse(sku.getSalePrice());
+//
+//				//minimum price logic
+//				if(pd.getMinPrice() != null)
+//				{
+//					Number minPrice = format.parse(pd.getMinPrice());
+//
+//					if(skuPrice.doubleValue() < minPrice.doubleValue())
+//					{
+//						pd.setMinPrice(sku.getSalePrice());
+//					}
+//				}
+//				else
+//				{
+//					pd.setMinPrice(sku.getSalePrice());
+//				}
+//
+//				//maximum price logic
+//				if(pd.getMaxPrice() != null)
+//				{
+//					Number maxPrice = format.parse(pd.getMaxPrice());
+//
+//					if(skuPrice.doubleValue() > maxPrice.doubleValue())
+//					{
+//						pd.setMaxPrice(sku.getSalePrice());
+//					}
+//				}
+//				else
+//				{
+//					pd.setMaxPrice(sku.getSalePrice());
+//				}
+//			}
+//			catch(ParseException e)
+//			{
+//				e.printStackTrace(System.err);
+//			}
+//		}
 
 		return pd;
 	}

@@ -63,7 +63,6 @@ public class GiltApi {
 		List<KeyValuePair> params = new ArrayList<KeyValuePair>();
 
 		params.add(new KeyValuePair("apikey", Constants.GILT_ACCESS_TOKEN));
-		params.add(new KeyValuePair("product_detail", "true"));
 
 		String url = buildSaleUrl(prop);
 		String response = URLUtil.doGet(url, params);

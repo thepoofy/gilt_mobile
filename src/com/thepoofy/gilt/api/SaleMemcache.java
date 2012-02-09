@@ -48,29 +48,37 @@ public class SaleMemcache
 	 */
 	public List<Sale> getLatest(GiltProperty saleProperty)
 	{
-		//save us from a Memcache hit if this instance has already fetched data
-		List<Sale> inMemorySales = saleMap.get(saleProperty).getSales();
-		if(inMemorySales != null && !inMemorySales.isEmpty())
+		if(saleProperty == null)
 		{
-			return inMemorySales;
+			throw new IllegalArgumentException("Gilt Sale Type cannot be null");
 		}
 
+		//save us from a Memcache hit if this instance has already fetched data
+		SalesResponse response = saleMap.get(saleProperty);
+		if(response != null)
+		{
+			List<Sale> inMemorySales = response.getSales();
+			if(inMemorySales != null && !inMemorySales.isEmpty())
+			{
+				return inMemorySales;
+			}
+		}
 
 		try
 		{
 			MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 
-			@SuppressWarnings("unchecked")
-			List<Sale> cachedData = (List<Sale>)syncCache.get(saleProperty);
 
-			if(cachedData == null || cachedData.isEmpty())
+			SalesResponse cachedData = (SalesResponse)syncCache.get(saleProperty);
+
+			if(cachedData == null)
 			{
 				//get fresh data.
 				return forceUpdate(saleProperty);
 			}
 			else
 			{
-				return cachedData;
+				return cachedData.getSales();
 			}
 		}
 		catch(GiltApiException e)
