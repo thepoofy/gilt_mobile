@@ -9,6 +9,8 @@ import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.thepoofy.gilt.ClothingCategory;
 import com.thepoofy.gilt.model.BrandCount;
@@ -23,6 +25,8 @@ import com.williamvanderhoef.gilt.model.Sale;
  *
  */
 public class GiltDao {
+
+	private static final Logger log = Logger.getLogger(GiltDao.class.getName());
 
 	private List<BrandCount> brandsCount;
 	private List<CategoryCount> categoriesCount;
@@ -122,7 +126,6 @@ public class GiltDao {
 				if(!categories.containsKey(cat.name))
 				{
 					bc = new CategoryCount(cat.name, p.getImageUrl());
-
 				}
 				else if(categories.containsKey(cat.name))
 				{
@@ -156,8 +159,7 @@ public class GiltDao {
 				}
 				catch(ParseException e)
 				{
-					//TODO correct logger
-					e.printStackTrace();
+					log.log(Level.WARNING, e.getMessage(), e);
 				}
 
 				categories.put(cat.name, bc);
@@ -197,7 +199,6 @@ public class GiltDao {
 			{
 				if(key.equals(word.toLowerCase()))
 				{
-					System.out.println("Word: "+key+" found in '"+text+"'");
 					return true;
 				}
 			}
@@ -205,7 +206,6 @@ public class GiltDao {
 
 		return false;
 	}
-
 
 	/**
 	 * @return the brandsCount

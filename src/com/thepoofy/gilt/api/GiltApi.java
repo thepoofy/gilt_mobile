@@ -15,7 +15,6 @@ import com.thepoofy.gilt.constants.Constants;
 import com.thepoofy.util.KeyValuePair;
 import com.thepoofy.util.URLUtil;
 import com.williamvanderhoef.gilt.model.Product;
-import com.williamvanderhoef.gilt.model.Sale;
 import com.williamvanderhoef.gilt.responses.SalesResponse;
 
 /**
@@ -59,7 +58,7 @@ public class GiltApi {
 	 * @return sales
 	 * @throws GiltApiException
 	 */
-	public static List<Sale> fetchSales(GiltProperty prop) throws GiltApiException
+	public static SalesResponse fetchSales(GiltProperty prop) throws GiltApiException
 	{
 		List<KeyValuePair> params = new ArrayList<KeyValuePair>();
 
@@ -108,7 +107,7 @@ public class GiltApi {
 		}
 
 
-		return salesResponse.getSales();
+		return salesResponse;
 	}
 
 	/**

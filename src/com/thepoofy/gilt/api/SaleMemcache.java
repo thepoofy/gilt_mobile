@@ -11,6 +11,7 @@ import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.thepoofy.gilt.GiltProperty;
 import com.williamvanderhoef.gilt.model.Sale;
+import com.williamvanderhoef.gilt.responses.SalesResponse;
 
 /**
  *
@@ -19,7 +20,7 @@ import com.williamvanderhoef.gilt.model.Sale;
  */
 public class SaleMemcache
 {
-	private Map<GiltProperty, List<Sale>> saleMap = new EnumMap<GiltProperty, List<Sale>>(GiltProperty.class);
+	private Map<GiltProperty, SalesResponse> saleMap = new EnumMap<GiltProperty, SalesResponse>(GiltProperty.class);
 
 	private static final Logger log = Logger.getLogger(SaleMemcache.class.getName());
 
@@ -30,7 +31,7 @@ public class SaleMemcache
 	 * @param saleProperty
 	 * @param sales
 	 */
-	public void onSaleUpdate(GiltProperty saleProperty, List<Sale> sales)
+	public void onSaleUpdate(GiltProperty saleProperty, SalesResponse sales)
 	{
 		saleMap.put(saleProperty, sales);
 
@@ -48,7 +49,7 @@ public class SaleMemcache
 	public List<Sale> getLatest(GiltProperty saleProperty)
 	{
 		//save us from a Memcache hit if this instance has already fetched data
-		List<Sale> inMemorySales = saleMap.get(saleProperty);
+		List<Sale> inMemorySales = saleMap.get(saleProperty).getSales();
 		if(inMemorySales != null && !inMemorySales.isEmpty())
 		{
 			return inMemorySales;
@@ -75,7 +76,7 @@ public class SaleMemcache
 		catch(GiltApiException e)
 		{
 			log.log(Level.WARNING, e.getMessage(), e);
-			e.printStackTrace();
+
 			return Collections.emptyList();
 		}
 	}
@@ -88,11 +89,11 @@ public class SaleMemcache
 	 */
 	public List<Sale> forceUpdate(GiltProperty saleType) throws GiltApiException
 	{
-		List<Sale> freshData = GiltApi.fetchSales(saleType);
+		SalesResponse freshData = GiltApi.fetchSales(saleType);
 
 		onSaleUpdate(saleType, freshData);
 
-		return freshData;
+		return freshData.getSales();
 
 	}
 }

@@ -36,7 +36,7 @@ public class ProductDetails {
 		pd.setBrandName(p.getBrand());
 		pd.setProductName(p.getName());
 
-		pd.setImageUrl(p.getImageUrls().get("91x121").get(0).getUrl());
+		pd.setImageUrl(findProductImage(p));
 
 		for(Sku sku : p.getSkus())
 		{
@@ -85,6 +85,14 @@ public class ProductDetails {
 
 		return pd;
 	}
+
+	private static final String SMALL_IMAGE_SIZE = "91x121";
+
+	private static String findProductImage(Product p)
+	{
+		return p.getImageUrls().get(SMALL_IMAGE_SIZE).get(0).getUrl();
+	}
+
 
 	/**
 	 * @return the imageUrl
