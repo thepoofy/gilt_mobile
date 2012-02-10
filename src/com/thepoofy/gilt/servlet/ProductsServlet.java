@@ -36,7 +36,7 @@ public class ProductsServlet extends ServletBase
 			//guarantees a category
 			ClothingCategory category = ClothingCategory.find(cat);
 
-			SaleMemcache cache = DataSingleton.INSTANCE.getCache();
+			SaleMemcache cache = DataSingleton.INSTANCE.getSaleCache();
 			List<Sale> sales = cache.getLatest(GiltProperty.valueOf(siteName));
 
 			GiltDao dao = new GiltDao(sales);

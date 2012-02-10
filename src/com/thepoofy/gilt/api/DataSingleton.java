@@ -1,22 +1,37 @@
 package com.thepoofy.gilt.api;
 
-
+/**
+ *
+ * @author wvanderhoef
+ *
+ */
 public enum DataSingleton {
 
-	INSTANCE;
+	/** */INSTANCE;
 
-	private SaleMemcache cache;
+	private SaleMemcache saleCache;
+	private ProductMemcache productCache;
 
 	private DataSingleton(){
-		cache = new SaleMemcache();
+		saleCache = new SaleMemcache();
+		productCache = new ProductMemcache();
 	}
 
 	/**
 	 *
-	 * @return
+	 * @return memcache
 	 */
-	public SaleMemcache getCache()
+	public SaleMemcache getSaleCache()
 	{
-		return cache;
+		return saleCache;
+	}
+
+	/**
+	 *
+	 * @return memcache
+	 */
+	public ProductMemcache getProductCache()
+	{
+		return productCache;
 	}
 }

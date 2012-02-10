@@ -31,7 +31,7 @@ public class BrandsServlet extends ServletBase
 		{
 			String siteName = getParameter(request, "site", true);
 			
-			SaleMemcache cache = DataSingleton.INSTANCE.getCache();
+			SaleMemcache cache = DataSingleton.INSTANCE.getSaleCache();
 			List<Sale> sales = cache.getLatest(GiltProperty.valueOf(siteName));
 
 			GiltDao dao = new GiltDao(sales);

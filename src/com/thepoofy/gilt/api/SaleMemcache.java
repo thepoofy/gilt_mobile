@@ -7,14 +7,20 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.thepoofy.gilt.GiltProperty;
 import com.williamvanderhoef.gilt.model.Sale;
 import com.williamvanderhoef.gilt.responses.SalesResponse;
 
+/**
+ *
+ * @author wvanderhoef
+ *
+ */
 public class SaleMemcache
 {
 	private Map<GiltProperty, SalesResponse> saleMap = new EnumMap<GiltProperty, SalesResponse>(GiltProperty.class);
-
 
 	private static final Logger log = Logger.getLogger(SaleMemcache.class.getName());
 
@@ -29,49 +35,56 @@ public class SaleMemcache
 	{
 		saleMap.put(saleProperty, sales);
 
-		//TODO reenable the memcache
 		// Using the synchronous cache
-//		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
-//
-//		syncCache.put(saleProperty, sales);
+		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+
+		syncCache.put(saleProperty, sales);
 	}
 
 	/**
 	 *
 	 * @param saleProperty
-	 * @return
+	 * @return sales
 	 */
 	public List<Sale> getLatest(GiltProperty saleProperty)
 	{
-		//save us from a Memcache hit if this instance has already fetched data
-		List<Sale> inMemorySales = saleMap.get(saleProperty).getSales();
-		if(inMemorySales != null && !inMemorySales.isEmpty())
+		if(saleProperty == null)
 		{
-			return inMemorySales;
+			throw new IllegalArgumentException("Gilt Sale Type cannot be null");
 		}
 
+		//save us from a Memcache hit if this instance has already fetched data
+		SalesResponse response = saleMap.get(saleProperty);
+		if(response != null)
+		{
+			List<Sale> inMemorySales = response.getSales();
+			if(inMemorySales != null && !inMemorySales.isEmpty())
+			{
+				return inMemorySales;
+			}
+		}
 
 		try
 		{
-//			MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
-//	
-//			@SuppressWarnings("unchecked")
-//			List<Sale> cachedData = (List<Sale>)syncCache.get(saleProperty);
-//
-//			if(cachedData == null || cachedData.isEmpty())
-//			{
+			MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+
+
+			SalesResponse cachedData = (SalesResponse)syncCache.get(saleProperty);
+
+			if(cachedData == null)
+			{
 				//get fresh data.
 				return forceUpdate(saleProperty);
-//			}
-//			else
-//			{
-//				return cachedData;
-//			}
+			}
+			else
+			{
+				return cachedData.getSales();
+			}
 		}
 		catch(GiltApiException e)
 		{
 			log.log(Level.WARNING, e.getMessage(), e);
-			
+
 			return Collections.emptyList();
 		}
 	}
@@ -79,14 +92,16 @@ public class SaleMemcache
 	/**
 	 *
 	 * @param saleType
-	 * @return
+	 * @return sales
+	 * @throws GiltApiException
 	 */
 	public List<Sale> forceUpdate(GiltProperty saleType) throws GiltApiException
 	{
-		SalesResponse response = GiltApi.fetchSales(saleType);
-		
-		onSaleUpdate(saleType, response);
-		
-		return response.getSales();
+		SalesResponse freshData = GiltApi.fetchSales(saleType);
+
+		onSaleUpdate(saleType, freshData);
+
+		return freshData.getSales();
+
 	}
 }

@@ -1,7 +1,5 @@
 package com.thepoofy.gilt.api;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -9,27 +7,35 @@ import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.thepoofy.gilt.ClothingCategory;
 import com.thepoofy.gilt.model.BrandCount;
 import com.thepoofy.gilt.model.CategoryCount;
+import com.thepoofy.gilt.model.ProductDetails;
 import com.williamvanderhoef.gilt.model.Product;
 import com.williamvanderhoef.gilt.model.Sale;
-import com.williamvanderhoef.gilt.model.Sku;
 
-public class GiltDao 
-{
+/**
+ *
+ * @author wvanderhoef
+ *
+ */
+public class GiltDao {
+
 	private static final Logger log = Logger.getLogger(GiltDao.class.getName());
-	
+
 	private List<BrandCount> brandsCount;
 	private List<CategoryCount> categoriesCount;
-	private final Map<ClothingCategory, List<Product>> categoryBuckets;
+	private final Map<ClothingCategory, List<ProductDetails>> categoryBuckets;
 
+	/**
+	 *
+	 * @param sales
+	 */
 	public GiltDao(List<Sale> sales)
 	{
-		categoryBuckets = new EnumMap<ClothingCategory, List<Product>>(ClothingCategory.class);
+		categoryBuckets = new EnumMap<ClothingCategory, List<ProductDetails>>(ClothingCategory.class);
 
 		init(sales);
 
@@ -58,15 +64,28 @@ public class GiltDao
 
 		for(Sale s : sales)
 		{
-			List<Product> products = s.getProducts();
+			List<String> productUrls = s.getProducts();
 
-			if(products != null)
+			if(productUrls != null)
 			{
-				for(Product p : products)
+//				for(String productUrl : productUrls)
+				for(int i=0; i<productUrls.size() && i< 2; ++i)
 				{
-					brandsLogic(p, brands);
+					String productUrl = productUrls.get(i);
+					Product p = DataSingleton.INSTANCE.getProductCache().getLatest(productUrl);
 
-					categoriesLogic(p, categories);
+					ProductDetails pd = ProductDetails.valueOf(p);
+
+					if(pd != null)
+					{
+						//brandsLogic(pd, brands);
+
+						categoriesLogic(pd, categories);
+					}
+					else
+					{
+						System.out.println("ProductDetails null");
+					}
 				}
 			}
 		}
@@ -79,9 +98,9 @@ public class GiltDao
 
 	}
 
-	private void brandsLogic(Product p, Map<String, BrandCount> brands)
+	private void brandsLogic(ProductDetails p, Map<String, BrandCount> brands)
 	{
-		String brand = p.getBrand();
+		String brand = p.getBrandName();
 
 		if(brand != null && !brands.containsKey(brand))
 		{
@@ -99,59 +118,54 @@ public class GiltDao
 		}
 	}
 
-	private void categoriesLogic(Product p, Map<String, CategoryCount> categories)
+	private void categoriesLogic(ProductDetails p, Map<String, CategoryCount> categories)
 	{
 		for(ClothingCategory cat : ClothingCategory.values())
 		{
-			if((matches(cat.searchText, p.getName())))
-//				|| (p.getContent() != null
-//					&& matches(cat.searchText, p.getContent().getDescription())))
+			if((matches(cat.searchText, p.getProductName())))
 			{
-				CategoryCount bc = null;
+				CategoryCount categoryCount = null;
 
 				if(!categories.containsKey(cat.name))
 				{
-					bc = new CategoryCount(cat.name, findProductImage(p));
-
+					categoryCount = new CategoryCount(cat.name, p.getImageUrl());
 				}
 				else if(categories.containsKey(cat.name))
 				{
-					bc = categories.get(cat.name);
+					categoryCount = categories.get(cat.name);
 				}
 
-				++bc.count;
+				++categoryCount.count;
 
 				addProductToBucket(cat, p);
+//
+//				if(categoryCount.getMinPrice() == null && p.getMinPrice() != null)
+//				{
+//					categoryCount.setMinPrice(p.getMinPrice());
+//				}
+//
+//				try
+//				{
+//					NumberFormat format = NumberFormat.getInstance();
+//					Number minPrice = NumberFormat.getInstance().parse(p.getMinPrice());
+//
+//					//minimum price logic
+//					if(categoryCount.getMinPrice() != null)
+//					{
+//						Number categoryMinPrice = format.parse(categoryCount.getMinPrice());
+//
+//						if(minPrice.doubleValue() < categoryMinPrice.doubleValue())
+//						{
+//							categoryCount.setMinPrice(p.getMinPrice());
+//						}
+//					}
+//				}
+//				catch(ParseException e)
+//				{
+//					log.log(Level.WARNING, e.getMessage(), e);
+//				}
 
-
-				for(Sku sku : p.getSkus())
-				{
-					try
-					{
-						NumberFormat format = NumberFormat.getInstance();
-						Number skuPrice = NumberFormat.getInstance().parse(sku.getSalePrice());
-
-						if(bc.getMinPrice() != null)
-						{
-							Number minPrice = format.parse(bc.getMinPrice());
-
-							if(skuPrice.doubleValue() < minPrice.doubleValue())
-							{
-								bc.setMinPrice(sku.getSalePrice());
-							}
-						}
-						else
-						{
-							bc.setMinPrice(sku.getSalePrice());
-						}
-					}
-					catch(ParseException e)
-					{
-						log.log(Level.WARNING, e.getMessage(), e);
-					}
-				}
-
-				categories.put(cat.name, bc);
+				categories.put(cat.name, categoryCount);
 
 				//return here to prevent a product from falling into a catch-all category
 				return;
@@ -160,16 +174,16 @@ public class GiltDao
 	}
 
 
-	private void addProductToBucket(ClothingCategory cat, Product p)
+	private void addProductToBucket(ClothingCategory cat, ProductDetails p)
 	{
-		List<Product> products ;
+		List<ProductDetails> products ;
 		if(categoryBuckets.containsKey(cat))
 		{
 			products = categoryBuckets.get(cat);
 		}
 		else
 		{
-			products = new ArrayList<Product>();
+			products = new ArrayList<ProductDetails>();
 		}
 
 		products.add(p);
@@ -195,13 +209,6 @@ public class GiltDao
 
 		return false;
 	}
-	
-	private static final String SMALL_IMAGE_SIZE = "91x121";
-
-	private static String findProductImage(Product p)
-	{
-		return p.getImageUrls().get(SMALL_IMAGE_SIZE).get(0).getUrl();
-	}
 
 	/**
 	 * @return the brandsCount
@@ -216,9 +223,11 @@ public class GiltDao
 		return categoriesCount;
 	}
 	/**
-	 * @return the categoryBuckets
+	 *
+	 * @param category
+	 * @return list of products
 	 */
-	public List<Product> getCategoryBuckets(ClothingCategory category) {
+	public List<ProductDetails> getCategoryBuckets(ClothingCategory category) {
 		return categoryBuckets.get(category);
 	}
 }
