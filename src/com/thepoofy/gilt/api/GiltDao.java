@@ -61,20 +61,24 @@ public class GiltDao {
 		{
 			return;
 		}
+		
+		log.info("Found "+sales.size()+ " sales");
 
 		for(Sale s : sales)
 		{
 			List<String> productUrls = s.getProducts();
-
+			
+			
 			if(productUrls != null)
 			{
-//				for(String productUrl : productUrls)
-				for(int i=0; i<productUrls.size() && i< 2; ++i)
+				log.info("Sale: "+s.getName()+ " has "+productUrls.size()+" products.");
+				
+				for(String productUrl : productUrls)
 				{
-					String productUrl = productUrls.get(i);
 					Product p = DataSingleton.INSTANCE.getProductCache().getLatest(productUrl);
 
 					ProductDetails pd = ProductDetails.valueOf(p);
+					
 
 					if(pd != null)
 					{
@@ -82,12 +86,13 @@ public class GiltDao {
 
 						categoriesLogic(pd, categories);
 					}
-					else
-					{
-						System.out.println("ProductDetails null");
-					}
 				}
 			}
+			else
+			{
+				log.info("Sale: "+s.getName()+ " has no products.");
+			}
+			
 		}
 
 		brandsCount = new ArrayList<BrandCount>();
@@ -98,37 +103,39 @@ public class GiltDao {
 
 	}
 
-	private void brandsLogic(ProductDetails p, Map<String, BrandCount> brands)
-	{
-		String brand = p.getBrandName();
+//	private void brandsLogic(ProductDetails p, Map<String, BrandCount> brands)
+//	{
+//		String brand = p.getBrandName();
+//
+//		if(brand != null && !brands.containsKey(brand))
+//		{
+//			BrandCount bc = new BrandCount(brand);
+//			++bc.count;
+//
+//			brands.put(brand, bc);
+//		}
+//		else if(brand != null && brands.containsKey(brand))
+//		{
+//			BrandCount bc = brands.get(brand);
+//			++bc.count;
+//
+//			brands.put(brand, bc);
+//		}
+//	}
 
-		if(brand != null && !brands.containsKey(brand))
-		{
-			BrandCount bc = new BrandCount(brand);
-			++bc.count;
-
-			brands.put(brand, bc);
-		}
-		else if(brand != null && brands.containsKey(brand))
-		{
-			BrandCount bc = brands.get(brand);
-			++bc.count;
-
-			brands.put(brand, bc);
-		}
-	}
-
-	private void categoriesLogic(ProductDetails p, Map<String, CategoryCount> categories)
+	private void categoriesLogic(ProductDetails productDetails, Map<String, CategoryCount> categories)
 	{
 		for(ClothingCategory cat : ClothingCategory.values())
 		{
-			if((matches(cat.searchText, p.getProductName())))
+			if((matches(cat.searchText, productDetails.getProductName())))
 			{
+				log.info(cat.searchText+" found in "+productDetails.getProductName());
+				
 				CategoryCount categoryCount = null;
 
 				if(!categories.containsKey(cat.name))
 				{
-					categoryCount = new CategoryCount(cat.name, p.getImageUrl());
+					categoryCount = new CategoryCount(cat.name, productDetails.getImageUrl());
 				}
 				else if(categories.containsKey(cat.name))
 				{
@@ -137,7 +144,7 @@ public class GiltDao {
 
 				++categoryCount.count;
 
-				addProductToBucket(cat, p);
+				addProductToBucket(cat, productDetails);
 //
 //				if(categoryCount.getMinPrice() == null && p.getMinPrice() != null)
 //				{
@@ -169,6 +176,10 @@ public class GiltDao {
 
 				//return here to prevent a product from falling into a catch-all category
 				return;
+			}
+			else
+			{
+				log.info(cat.searchText+" not found in "+productDetails.getProductName());
 			}
 		}
 	}

@@ -64,6 +64,14 @@
     <servlet-name>UpdateProductServlet</servlet-name>
     <url-pattern>/tasks/update_product</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>MemcacheAdminServlet</servlet-name>
+    <servlet-class>com.thepoofy.gilt.servlet.tasks.MemcacheAdminServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MemcacheAdminServlet</servlet-name>
+    <url-pattern>/tasks/memcache_admin</url-pattern>
+  </servlet-mapping>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>

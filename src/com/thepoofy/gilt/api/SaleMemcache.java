@@ -1,5 +1,6 @@
 package com.thepoofy.gilt.api;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -24,7 +25,10 @@ public class SaleMemcache
 
 	private static final Logger log = Logger.getLogger(SaleMemcache.class.getName());
 
-
+	public Collection<SalesResponse> getCache()
+	{
+		return saleMap.values();
+	}
 
 	/**
 	 *

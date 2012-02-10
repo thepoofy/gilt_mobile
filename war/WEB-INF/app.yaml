@@ -34,6 +34,11 @@ handlers:
   name: UpdateProductServlet
   servlet: com.thepoofy.gilt.servlet.tasks.UpdateProductServlet
 
+- url: /tasks/memcache_admin
+  name: MemcacheAdminServlet
+  servlet: com.thepoofy.gilt.servlet.tasks.MemcacheAdminServlet
+
+
 
 threadsafe: true
 

@@ -1,11 +1,8 @@
 package com.thepoofy.gilt.model;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.List;
 
 import com.williamvanderhoef.gilt.model.Product;
-import com.williamvanderhoef.gilt.model.Sku;
 
 /**
  *
@@ -14,6 +11,7 @@ import com.williamvanderhoef.gilt.model.Sku;
  */
 public class ProductDetails {
 
+	private Number id;
 	private String imageUrl;
 	private String brandName;
 	private String productName;
@@ -33,10 +31,13 @@ public class ProductDetails {
 	{
 		ProductDetails pd = new ProductDetails();
 
+		pd.setId(p.getId());
 		pd.setBrandName(p.getBrand());
 		pd.setProductName(p.getName());
 
 		pd.setImageUrl(findProductImage(p));
+		
+		pd.setUrl(p.getUrl());
 //
 //		for(Sku sku : p.getSkus())
 //		{
@@ -187,6 +188,22 @@ public class ProductDetails {
 	 */
 	public void setSizes(List<String> sizes) {
 		this.sizes = sizes;
+	}
+
+
+	/**
+	 * @return the id
+	 */
+	public Number getId() {
+		return id;
+	}
+
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Number id) {
+		this.id = id;
 	}
 
 

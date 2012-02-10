@@ -20,7 +20,10 @@ public class ProductMemcache
 
 	private static final Logger log = Logger.getLogger(ProductMemcache.class.getName());
 
-
+	public Map<String, Product> getCache()
+	{
+		return cacheMap;
+	}
 
 	/**
 	 *
