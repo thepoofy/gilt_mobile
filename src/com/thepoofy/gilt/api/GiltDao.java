@@ -1,5 +1,7 @@
 package com.thepoofy.gilt.api;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -7,6 +9,7 @@ import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.thepoofy.gilt.ClothingCategory;
@@ -61,24 +64,24 @@ public class GiltDao {
 		{
 			return;
 		}
-		
+
 		log.info("Found "+sales.size()+ " sales");
 
 		for(Sale s : sales)
 		{
 			List<String> productUrls = s.getProducts();
-			
-			
+
+
 			if(productUrls != null)
 			{
 				log.info("Sale: "+s.getName()+ " has "+productUrls.size()+" products.");
-				
+
 				for(String productUrl : productUrls)
 				{
 					Product p = DataSingleton.INSTANCE.getProductCache().getLatest(productUrl);
 
 					ProductDetails pd = ProductDetails.valueOf(p);
-					
+
 
 					if(pd != null)
 					{
@@ -92,7 +95,7 @@ public class GiltDao {
 			{
 				log.info("Sale: "+s.getName()+ " has no products.");
 			}
-			
+
 		}
 
 		brandsCount = new ArrayList<BrandCount>();
@@ -127,10 +130,10 @@ public class GiltDao {
 	{
 		for(ClothingCategory cat : ClothingCategory.values())
 		{
-			if((matches(cat.searchText, productDetails.getProductName())))
+			if((matches(cat.searchText, productDetails.getName())))
 			{
-				log.info(cat.searchText+" found in "+productDetails.getProductName());
-				
+//				log.info(cat.searchText+" found in "+productDetails.getName());
+
 				CategoryCount categoryCount = null;
 
 				if(!categories.containsKey(cat.name))
@@ -146,31 +149,31 @@ public class GiltDao {
 
 				addProductToBucket(cat, productDetails);
 //
-//				if(categoryCount.getMinPrice() == null && p.getMinPrice() != null)
-//				{
-//					categoryCount.setMinPrice(p.getMinPrice());
-//				}
-//
-//				try
-//				{
-//					NumberFormat format = NumberFormat.getInstance();
-//					Number minPrice = NumberFormat.getInstance().parse(p.getMinPrice());
-//
-//					//minimum price logic
-//					if(categoryCount.getMinPrice() != null)
-//					{
-//						Number categoryMinPrice = format.parse(categoryCount.getMinPrice());
-//
-//						if(minPrice.doubleValue() < categoryMinPrice.doubleValue())
-//						{
-//							categoryCount.setMinPrice(p.getMinPrice());
-//						}
-//					}
-//				}
-//				catch(ParseException e)
-//				{
-//					log.log(Level.WARNING, e.getMessage(), e);
-//				}
+				if(categoryCount.getMinPrice() == null && productDetails.getMinPrice() != null)
+				{
+					categoryCount.setMinPrice(productDetails.getMinPrice());
+				}
+
+				try
+				{
+					NumberFormat format = NumberFormat.getInstance();
+					Number minPrice = NumberFormat.getInstance().parse(productDetails.getMinPrice());
+
+					//minimum price logic
+					if(categoryCount.getMinPrice() != null)
+					{
+						Number categoryMinPrice = format.parse(categoryCount.getMinPrice());
+
+						if(minPrice.doubleValue() < categoryMinPrice.doubleValue())
+						{
+							categoryCount.setMinPrice(productDetails.getMinPrice());
+						}
+					}
+				}
+				catch(ParseException e)
+				{
+					log.log(Level.WARNING, e.getMessage(), e);
+				}
 
 				categories.put(cat.name, categoryCount);
 
@@ -179,7 +182,7 @@ public class GiltDao {
 			}
 			else
 			{
-				log.info(cat.searchText+" not found in "+productDetails.getProductName());
+//				log.info(cat.searchText+" not found in "+productDetails.getName());
 			}
 		}
 	}

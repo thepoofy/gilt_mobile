@@ -263,7 +263,7 @@
     	anchor.attr('href',product.url);
     	
     	anchor.append(create('img')    			
-        		.attr('src',product.imageUrls["91x121"][0].url)
+        		.attr('src',product.imageUrl)
         		.addClass('ui-li-thumb')
 				.addClass('categoryIcon')
         	);
@@ -293,35 +293,12 @@
 
     function findPriceRange(product)
     {
-    	var min = null;
-    	var max = null;
-    	
-    	$.each(product.skus, function(i, sku) 
-		{
-			var salePrice = parseFloat(sku.salePrice);
-			//alert(sku+" - "+sku.salePrice)
-    		if(min == null && salePrice != null)
-    		{
-    			min = salePrice;
-    			max = salePrice;
-    		}
-    		
-    		if(salePrice < min)
-    		{
-    			min = salePrice;
-    		}
-    		if(salePrice > max)
-    		{
-    			max = salePrice;
-    		}
-		});
-    	
-    	if( min != max){
+    	if( product.minPrice != product.maxPrice){
     		return "$"+min+" - $"+max;	
     	}
     	else
     	{
-    		return "$"+min;
+    		return "$"+product.minPrice;
     	}
     	
     }

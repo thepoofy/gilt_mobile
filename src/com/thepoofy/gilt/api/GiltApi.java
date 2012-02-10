@@ -131,7 +131,7 @@ public class GiltApi {
 
 		params.add(new KeyValuePair("apikey", Constants.GILT_ACCESS_TOKEN));
 
-		String response = URLUtil.doGet(url, params);
+		String response = URLUtil.doStandaloneGet(url, params);
 		if(response == null)
 		{
 			log.warning("GiltApi response was null.");

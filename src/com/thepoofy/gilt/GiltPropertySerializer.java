@@ -7,8 +7,16 @@ import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 
+/**
+ *
+ * @author wvanderhoef
+ *
+ */
 public class GiltPropertySerializer extends JsonSerializer<GiltProperty> {
 
+	/**
+	 *
+	 */
 	public GiltPropertySerializer() {
 
 	}

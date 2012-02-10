@@ -5,13 +5,13 @@ import java.util.List;
 
 
 public enum ClothingCategory {
-	
+
 	TOTE_BAG("Tote Bags", "tote bag"),
 	MESSENGER_BAG("Messenger Bags", "messenger bag"),
 
 	//TODO heels, shoes, pumps... etc.
 
-	DRESS("Dresses","dress", "frock", "shift"),
+
 	TOP("Tops"),
 	TEE("Tees"),
 	BLOUSE("Blouses"),
@@ -38,14 +38,17 @@ public enum ClothingCategory {
 	VEST("Vests"),
 	HENLEY("Henleys"),
 	SHIRT("Shirts"),
-	COAT("Coats", "anorak", "parka", "overcoats", "trench","jacket", "peacoat"),
-	
+
 	BOARDSHORTS("Boardshorts"),
 	PANTS("Pants"),
 	TROUSERS("Trousers"),
 	CHINOS("Chinos"),
 	JEANS("Jeans"),
-	
+
+	DRESS("Dresses","dress", "frock", "shift"),
+	COAT("Coats", "anorak", "parka", "overcoats", "trench","jacket", "peacoat"),
+
+
 	BOOTS("Boots"),
 	SNEAKERS("Sneakers"),
 

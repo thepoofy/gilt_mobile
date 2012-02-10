@@ -1,8 +1,11 @@
 package com.thepoofy.gilt.model;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.List;
 
 import com.williamvanderhoef.gilt.model.Product;
+import com.williamvanderhoef.gilt.model.Sku;
 
 /**
  *
@@ -12,9 +15,10 @@ import com.williamvanderhoef.gilt.model.Product;
 public class ProductDetails {
 
 	private Number id;
+	private String name;
 	private String imageUrl;
-	private String brandName;
-	private String productName;
+	private String brand;
+
 	private String url;
 	private String minPrice;
 	private String maxPrice;
@@ -32,57 +36,63 @@ public class ProductDetails {
 		ProductDetails pd = new ProductDetails();
 
 		pd.setId(p.getId());
-		pd.setBrandName(p.getBrand());
-		pd.setProductName(p.getName());
+		pd.setBrand(p.getBrand());
+		pd.setName(p.getName());
 
 		pd.setImageUrl(findProductImage(p));
-		
+
 		pd.setUrl(p.getUrl());
-//
-//		for(Sku sku : p.getSkus())
-//		{
-//			try
-//			{
-//				NumberFormat format = NumberFormat.getInstance();
-//				Number skuPrice = NumberFormat.getInstance().parse(sku.getSalePrice());
-//
-//				//minimum price logic
-//				if(pd.getMinPrice() != null)
-//				{
-//					Number minPrice = format.parse(pd.getMinPrice());
-//
-//					if(skuPrice.doubleValue() < minPrice.doubleValue())
-//					{
-//						pd.setMinPrice(sku.getSalePrice());
-//					}
-//				}
-//				else
-//				{
-//					pd.setMinPrice(sku.getSalePrice());
-//				}
-//
-//				//maximum price logic
-//				if(pd.getMaxPrice() != null)
-//				{
-//					Number maxPrice = format.parse(pd.getMaxPrice());
-//
-//					if(skuPrice.doubleValue() > maxPrice.doubleValue())
-//					{
-//						pd.setMaxPrice(sku.getSalePrice());
-//					}
-//				}
-//				else
-//				{
-//					pd.setMaxPrice(sku.getSalePrice());
-//				}
-//			}
-//			catch(ParseException e)
-//			{
-//				e.printStackTrace(System.err);
-//			}
-//		}
+
+		setMinMaxPrices(p, pd);
 
 		return pd;
+	}
+
+	private static void setMinMaxPrices(Product p, ProductDetails pd)
+	{
+
+		for(Sku sku : p.getSkus())
+		{
+			try
+			{
+				NumberFormat format = NumberFormat.getInstance();
+				Number skuPrice = NumberFormat.getInstance().parse(sku.getSalePrice());
+
+				//minimum price logic
+				if(pd.getMinPrice() != null)
+				{
+					Number minPrice = format.parse(pd.getMinPrice());
+
+					if(skuPrice.doubleValue() < minPrice.doubleValue())
+					{
+						pd.setMinPrice(sku.getSalePrice());
+					}
+				}
+				else
+				{
+					pd.setMinPrice(sku.getSalePrice());
+				}
+
+				//maximum price logic
+				if(pd.getMaxPrice() != null)
+				{
+					Number maxPrice = format.parse(pd.getMaxPrice());
+
+					if(skuPrice.doubleValue() > maxPrice.doubleValue())
+					{
+						pd.setMaxPrice(sku.getSalePrice());
+					}
+				}
+				else
+				{
+					pd.setMaxPrice(sku.getSalePrice());
+				}
+			}
+			catch(ParseException e)
+			{
+				e.printStackTrace(System.err);
+			}
+		}
 	}
 
 	private static final String SMALL_IMAGE_SIZE = "91x121";
@@ -108,26 +118,26 @@ public class ProductDetails {
 	/**
 	 * @return the brandName
 	 */
-	public String getBrandName() {
-		return brandName;
+	public String getBrand() {
+		return brand;
 	}
 	/**
 	 * @param brandName the brandName to set
 	 */
-	public void setBrandName(String brandName) {
-		this.brandName = brandName;
+	public void setBrand(String brandName) {
+		this.brand = brandName;
 	}
 	/**
 	 * @return the productName
 	 */
-	public String getProductName() {
-		return productName;
+	public String getName() {
+		return name;
 	}
 	/**
 	 * @param productName the productName to set
 	 */
-	public void setProductName(String productName) {
-		this.productName = productName;
+	public void setName(String productName) {
+		this.name = productName;
 	}
 	/**
 	 * @return the url
