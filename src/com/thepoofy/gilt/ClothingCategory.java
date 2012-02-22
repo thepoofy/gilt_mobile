@@ -12,7 +12,7 @@ public enum ClothingCategory {
 	//TODO heels, shoes, pumps... etc.
 
 
-	TOP("Tops"),
+
 	TEE("Tees"),
 	BLOUSE("Blouses"),
 	TANKS("Tanks"),
@@ -45,16 +45,21 @@ public enum ClothingCategory {
 	CHINOS("Chinos"),
 	JEANS("Jeans"),
 
+	SHOES("Shoes"),
+	BOOTS("Boots"),
+	SNEAKERS("Sneakers"),
+	OXFORDS("Oxfords"),
+
 	DRESS("Dresses","dress", "frock", "shift"),
 	COAT("Coats", "anorak", "parka", "overcoats", "trench","jacket", "peacoat"),
 
-
-	BOOTS("Boots"),
-	SNEAKERS("Sneakers"),
+	CAPS("Caps", "cap"),
 
 	SUNGLASSES("Sunglasses"),
 	WATCH("Watches"),
 	TIE("Ties"),
+
+	TOP("Tops"),
 
 	SET("Sets"),
 	;
