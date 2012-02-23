@@ -9,10 +9,6 @@ public enum ClothingCategory {
 	TOTE_BAG("Tote Bags", "tote bag"),
 	MESSENGER_BAG("Messenger Bags", "messenger bag"),
 
-	//TODO heels, shoes, pumps... etc.
-
-
-
 	TEE("Tees"),
 	BLOUSE("Blouses"),
 	TANKS("Tanks"),
@@ -40,15 +36,17 @@ public enum ClothingCategory {
 	SHIRT("Shirts"),
 
 	BOARDSHORTS("Boardshorts"),
-	PANTS("Pants"),
+	PANTS("Pants","pants","pant"),
 	TROUSERS("Trousers"),
 	CHINOS("Chinos"),
 	JEANS("Jeans"),
+	SKIRTS("Skirts","skirt"),
 
 	SHOES("Shoes"),
 	BOOTS("Boots"),
 	SNEAKERS("Sneakers"),
 	OXFORDS("Oxfords"),
+	FOOTWEAR("Footwear","heel","pump","wedge"),
 
 	DRESS("Dresses","dress", "frock", "shift"),
 	COAT("Coats", "anorak", "parka", "overcoats", "trench","jacket", "peacoat"),
@@ -61,7 +59,14 @@ public enum ClothingCategory {
 
 	TOP("Tops"),
 
+
+	//BEDDING("Bedding","pillow","pillow case","sham","duvet","duvet cover","flat sheet","fitted sheet","mattress","bed"),
+
+
 	SET("Sets"),
+
+
+//	OTHER("Other")
 	;
 
 	public final String name;
