@@ -80,14 +80,17 @@ public class GiltDao {
 				{
 					Product p = DataSingleton.INSTANCE.getProductCache().getLatest(productUrl);
 
-					ProductDetails pd = ProductDetails.valueOf(p);
-
-
-					if(pd != null)
+					if(p!=null)
 					{
-						//brandsLogic(pd, brands);
+						ProductDetails pd = ProductDetails.valueOf(p);
 
-						categoriesLogic(pd, categories);
+
+						if(pd != null)
+						{
+							//brandsLogic(pd, brands);
+
+							categoriesLogic(pd, categories);
+						}
 					}
 				}
 			}
@@ -132,59 +135,62 @@ public class GiltDao {
 		{
 			if((matches(cat.searchText, productDetails.getName())))
 			{
-//				log.info(cat.searchText+" found in "+productDetails.getName());
-
-				CategoryCount categoryCount = null;
-
-				if(!categories.containsKey(cat.name))
-				{
-					categoryCount = new CategoryCount(cat.name, productDetails.getImageUrl());
-				}
-				else if(categories.containsKey(cat.name))
-				{
-					categoryCount = categories.get(cat.name);
-				}
-
-				++categoryCount.count;
-
-				addProductToBucket(cat, productDetails);
-//
-				if(categoryCount.getMinPrice() == null && productDetails.getMinPrice() != null)
-				{
-					categoryCount.setMinPrice(productDetails.getMinPrice());
-				}
-
-				try
-				{
-					NumberFormat format = NumberFormat.getInstance();
-					Number minPrice = NumberFormat.getInstance().parse(productDetails.getMinPrice());
-
-					//minimum price logic
-					if(categoryCount.getMinPrice() != null)
-					{
-						Number categoryMinPrice = format.parse(categoryCount.getMinPrice());
-
-						if(minPrice.doubleValue() < categoryMinPrice.doubleValue())
-						{
-							categoryCount.setMinPrice(productDetails.getMinPrice());
-						}
-					}
-				}
-				catch(ParseException e)
-				{
-					log.log(Level.WARNING, e.getMessage(), e);
-				}
-
-				categories.put(cat.name, categoryCount);
+				addToCategory(categories, cat, productDetails);
 
 				//return here to prevent a product from falling into a catch-all category
 				return;
 			}
-			else
+		}
+
+		//the final catch all
+		addToCategory(categories, ClothingCategory.OTHER, productDetails);
+	}
+
+
+	private void addToCategory(Map<String, CategoryCount> categories, ClothingCategory cat, ProductDetails productDetails)
+	{
+		CategoryCount categoryCount = null;
+
+		if(!categories.containsKey(cat.name))
+		{
+			categoryCount = new CategoryCount(cat.name, productDetails.getImageUrl());
+		}
+		else if(categories.containsKey(cat.name))
+		{
+			categoryCount = categories.get(cat.name);
+		}
+
+		++categoryCount.count;
+
+		addProductToBucket(cat, productDetails);
+//
+		if(categoryCount.getMinPrice() == null && productDetails.getMinPrice() != null)
+		{
+			categoryCount.setMinPrice(productDetails.getMinPrice());
+		}
+
+		try
+		{
+			NumberFormat format = NumberFormat.getInstance();
+			Number minPrice = NumberFormat.getInstance().parse(productDetails.getMinPrice());
+
+			//minimum price logic
+			if(categoryCount.getMinPrice() != null)
 			{
-//				log.info(cat.searchText+" not found in "+productDetails.getName());
+				Number categoryMinPrice = format.parse(categoryCount.getMinPrice());
+
+				if(minPrice.doubleValue() < categoryMinPrice.doubleValue())
+				{
+					categoryCount.setMinPrice(productDetails.getMinPrice());
+				}
 			}
 		}
+		catch(ParseException e)
+		{
+			log.log(Level.WARNING, e.getMessage(), e);
+		}
+
+		categories.put(cat.name, categoryCount);
 	}
 
 
@@ -208,18 +214,27 @@ public class GiltDao {
 
 	private static boolean matches(List<String> keys, String text)
 	{
-		String[] words = text.split("\\s|\\.");
 
-		for(String word : words)
+		for(String k : keys)
 		{
-			for(String key : keys)
+			if(text.toLowerCase().contains(k))
 			{
-				if(key.equals(word.toLowerCase()))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
+
+//		String[] words = text.split("\\s|\\.");
+//
+//		for(String word : words)
+//		{
+//			for(String key : keys)
+//			{
+//				if(key.equals(word.toLowerCase()))
+//				{
+//					return true;
+//				}
+//			}
+//		}
 
 		return false;
 	}

@@ -143,7 +143,7 @@ public class GiltApi {
 
 		mapper.setPropertyNamingStrategy(new PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy());
 
-		Product product;
+		Product product = null;
 
 		try
 		{

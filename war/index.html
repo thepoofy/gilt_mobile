@@ -269,15 +269,16 @@
         	);
     	
     	var contentDiv = create('div');
-    	contentDiv.append(create('h3').addClass('productBrand').append(createText(product.brand)))
+		contentDiv.append(create('h3').addClass('productBrand').append(createText(product.brand)))
     	contentDiv.append(create('h4').addClass('productName').append(createText(product.name)));
-
+ 
     	
     	var priceDiv = create('div')
 			.addClass("priceBox");
 	
-		priceDiv.append(create('span')
+    	priceDiv.append(create('span')
 			.addClass('priceRange')
+			//.append(createText(product.minPrice)));
 			.append(createText(findPriceRange(product))));
 	
 		anchor.append(priceDiv);
@@ -293,12 +294,13 @@
 
     function findPriceRange(product)
     {
-    	if( product.minPrice != product.maxPrice){
-    		return "$"+min+" - $"+max;	
+    	if( product.minPrice === product.maxPrice)
+    	{
+    		return "$"+product.minPrice;
     	}
     	else
     	{
-    		return "$"+product.minPrice;
+    		return "$"+product.minPrice+" - $"+product.maxPrice;
     	}
     	
     }

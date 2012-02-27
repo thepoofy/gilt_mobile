@@ -67,7 +67,7 @@ public class URLUtil
 
 			request.getFetchOptions().setDeadline(20.0);
 
-			log.info(request.getURL().toExternalForm());
+//			log.info(request.getURL().toExternalForm());
 
 			HTTPResponse res = fetcher.fetch(request);
 
@@ -178,7 +178,7 @@ public class URLUtil
 		{
 			// Send data
 			URL url = new URL(address+"?"+createParamString(params));
-			System.out.println(url.toExternalForm());
+//			System.out.println(url.toExternalForm());
 			URLConnection conn = url.openConnection();
 
 			// Get the response

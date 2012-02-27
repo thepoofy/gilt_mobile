@@ -8,12 +8,44 @@ public enum ClothingCategory {
 
 	TOTE_BAG("Tote Bags", "tote bag"),
 	MESSENGER_BAG("Messenger Bags", "messenger bag"),
+	BAG("Bags","tote","clutch","satchel","bag","hobo","crossbody","pochette","messenger"),
+	WALLET("Wallets","wallet"),
+	ACCESSORIES("Accessories","card case","card holder","passport","e-reader","phone","ipad"),
 
 	TEE("Tees"),
-	BLOUSE("Blouses"),
+	BLOUSE("Blouses","blouse","blouses"),
 	TANKS("Tanks"),
 	SWEATSHIRT("Sweatshirts"),
 	SWEATPANTS("Sweatpants"),
+
+	GOWN("Gowns","gown","gowns"),
+	TUXEDO("Tuxedos"),
+	SUIT("Suits"),
+
+	TSHIRT("T-Shirts & Polos","t-shirt","polo"),
+	BLAZER("Blazers"),
+	SWEATER("Sweaters"),
+	CARDIGAN("Cardigans"),
+	HOODIE("Hoodies"),
+	VEST("Vests"),
+	HENLEY("Henleys"),
+	SHIRT("Shirts","shirt","workshirt","rugby", "pullover","button up"),
+	SCARF("Scarves","scarf","scarves"),
+	SOCK("Socks","socks"),
+
+	BOARDSHORTS("Boardshorts"),
+	SHORTS("Shorts","shorts","short"),
+	PANTS("Pants","pants","pant","chino","chinos","capri"),
+	TROUSERS("Trousers","trouser","trousers"),
+	LEGGING("Leggings","legging","leggings","tights","tight"),
+	SKIRTS("Skirts","skirt"),
+	JEANS("Jeans","jean","jeans","bootcut","boot cut"),
+
+	SHOES("Shoes","shoe","shoes"),
+	BOOTS("Boots","boot","boots"),
+	SNEAKERS("Sneakers","sneaker","sneakers","trainer"),
+	OXFORDS("Oxfords"),
+	FOOTWEAR("Footwear","heel","pump","wedge","sandal","flat","slingback","bootie","slip ons", "moccasins"),
 
 	NECKLACE("Necklaces"),
 	EARRINGS("Earrings"),
@@ -22,43 +54,24 @@ public enum ClothingCategory {
 	BRACELET("Bracelets"),
 	CUFF("Cuffs"),
 	HOOP("Hoops", "hoops","hoop"),
+	PENDANT("Pendants"),
 
-	TUXEDO("Tuxedos"),
-	SUIT("Suits"),
+	DRESS("Dresses","dress", "frock", "shift","maxi","mini"),
 
-	TSHIRT("T-Shirts","t-shirt"),
-	BLAZER("Blazers"),
-	SWEATER("Sweaters"),
-	CARDIGAN("Cardigans"),
-	HOODIE("Hoodies"),
-	VEST("Vests"),
-	HENLEY("Henleys"),
-	SHIRT("Shirts"),
+	COAT("Coats", "coat", "anorak", "parka", "overcoats", "trench","jacket", "peacoat", "raincoat", "windbreaker"),
+	CAPE("Capes","cape","capes"),
+	HAT("Caps", "cap","hat"),
+	INTIMATES("Intimates","babydoll","lingerie"),
 
-	BOARDSHORTS("Boardshorts"),
-	PANTS("Pants","pants","pant"),
-	TROUSERS("Trousers"),
-	CHINOS("Chinos"),
-	JEANS("Jeans"),
-	SKIRTS("Skirts","skirt"),
-
-	SHOES("Shoes"),
-	BOOTS("Boots"),
-	SNEAKERS("Sneakers"),
-	OXFORDS("Oxfords"),
-	FOOTWEAR("Footwear","heel","pump","wedge"),
-
-	DRESS("Dresses","dress", "frock", "shift"),
-	COAT("Coats", "anorak", "parka", "overcoats", "trench","jacket", "peacoat"),
-
-	CAPS("Caps", "cap"),
-
-	SUNGLASSES("Sunglasses"),
+	SUNGLASSES("Sunglasses","glasses","frames","frame","sunglasses"),
 	WATCH("Watches"),
-	TIE("Ties"),
+	BELT("Belts","belt"),
+	TIE("Ties","tie","bow","bowtie"),
 
-	TOP("Tops"),
+	TOP("Tops","top","tank","tunic","cami","wrap","crewneck","camisole"),
 
+	BLANKET("Blankets"),
+	UMBRELLA("Umbrellas"),
 
 	//BEDDING("Bedding","pillow","pillow case","sham","duvet","duvet cover","flat sheet","fitted sheet","mattress","bed"),
 
@@ -66,7 +79,7 @@ public enum ClothingCategory {
 	SET("Sets"),
 
 
-//	OTHER("Other")
+	OTHER("Other")
 	;
 
 	public final String name;
