@@ -271,6 +271,17 @@
     	var contentDiv = create('div');
 		contentDiv.append(create('h3').addClass('productBrand').append(createText(product.brand)))
     	contentDiv.append(create('h4').addClass('productName').append(createText(product.name)));
+		
+		if(product.isSoldOut)
+		{
+			contentDiv.append(create('h4').append(createText("Sold Out")));	
+		}
+		else
+		{
+			contentDiv.append(create('h4').append(createText(product.sizes)));
+		}
+		
+		
  
     	
     	var priceDiv = create('div')

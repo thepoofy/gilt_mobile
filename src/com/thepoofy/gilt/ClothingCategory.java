@@ -10,9 +10,10 @@ public enum ClothingCategory {
 	MESSENGER_BAG("Messenger Bags", "messenger bag"),
 	BAG("Bags","tote","clutch","satchel","bag","hobo","crossbody","pochette","messenger"),
 	WALLET("Wallets","wallet"),
-	ACCESSORIES("Accessories","card case","card holder","passport","e-reader","phone","ipad"),
+	ACCESSORIES("Accessories","card case","card holder","passport","e-reader","phone","ipad","case","shoelaces"),
+	LUGGAGE("Luggage","suitcase","laptop case","carry on"),
+	SOCK("Socks","socks","sock"),
 
-	TEE("Tees"),
 	BLOUSE("Blouses","blouse","blouses"),
 	TANKS("Tanks"),
 	SWEATSHIRT("Sweatshirts"),
@@ -22,7 +23,7 @@ public enum ClothingCategory {
 	TUXEDO("Tuxedos"),
 	SUIT("Suits"),
 
-	TSHIRT("T-Shirts & Polos","t-shirt","polo"),
+	TSHIRT("T-Shirts & Polos","t-shirt","polo","tees","tee"),
 	BLAZER("Blazers"),
 	SWEATER("Sweaters"),
 	CARDIGAN("Cardigans"),
@@ -31,7 +32,7 @@ public enum ClothingCategory {
 	HENLEY("Henleys"),
 	SHIRT("Shirts","shirt","workshirt","rugby", "pullover","button up"),
 	SCARF("Scarves","scarf","scarves"),
-	SOCK("Socks","socks"),
+
 
 	BOARDSHORTS("Boardshorts"),
 	SHORTS("Shorts","shorts","short"),
@@ -40,6 +41,8 @@ public enum ClothingCategory {
 	LEGGING("Leggings","legging","leggings","tights","tight"),
 	SKIRTS("Skirts","skirt"),
 	JEANS("Jeans","jean","jeans","bootcut","boot cut"),
+
+	SUNGLASSES("Sunglasses","glasses","frames","frame","sunglasses"),
 
 	SHOES("Shoes","shoe","shoes"),
 	BOOTS("Boots","boot","boots"),
@@ -56,14 +59,14 @@ public enum ClothingCategory {
 	HOOP("Hoops", "hoops","hoop"),
 	PENDANT("Pendants"),
 
-	DRESS("Dresses","dress", "frock", "shift","maxi","mini"),
+	DRESS("Dresses","dress", "frock", "shift","maxi","mini","sheath"),
 
-	COAT("Coats", "coat", "anorak", "parka", "overcoats", "trench","jacket", "peacoat", "raincoat", "windbreaker"),
+	COAT("Coats", "coat", "anorak", "parka", "overcoats", "trench","jacket", "peacoat", "raincoat", "windbreaker", "bomber"),
 	CAPE("Capes","cape","capes"),
 	HAT("Caps", "cap","hat"),
 	INTIMATES("Intimates","babydoll","lingerie"),
 
-	SUNGLASSES("Sunglasses","glasses","frames","frame","sunglasses"),
+
 	WATCH("Watches"),
 	BELT("Belts","belt"),
 	TIE("Ties","tie","bow","bowtie"),

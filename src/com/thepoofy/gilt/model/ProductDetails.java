@@ -2,8 +2,10 @@ package com.thepoofy.gilt.model;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.williamvanderhoef.gilt.model.Attribute;
 import com.williamvanderhoef.gilt.model.Product;
 import com.williamvanderhoef.gilt.model.Sku;
 
@@ -12,7 +14,8 @@ import com.williamvanderhoef.gilt.model.Sku;
  * @author wvanderhoef
  *
  */
-public class ProductDetails {
+public class ProductDetails implements Comparable<ProductDetails>
+{
 
 	private Number id;
 	private String name;
@@ -25,6 +28,9 @@ public class ProductDetails {
 
 	private List<String> colors;
 	private List<String> sizes;
+
+	private boolean isSoldOut;
+
 
 	/**
 	 *
@@ -43,13 +49,16 @@ public class ProductDetails {
 
 		pd.setUrl(p.getUrl());
 
-		setMinMaxPrices(p, pd);
+		setSkuLevelStuff(p, pd);
 
 		return pd;
 	}
 
-	private static void setMinMaxPrices(Product p, ProductDetails pd)
+	private static void setSkuLevelStuff(Product p, ProductDetails pd)
 	{
+		boolean isSoldOut = true;
+		List<String> colors = new ArrayList<String>();
+		List<String> sizes = new ArrayList<String>();
 
 		for(Sku sku : p.getSkus())
 		{
@@ -92,7 +101,49 @@ public class ProductDetails {
 			{
 				e.printStackTrace(System.err);
 			}
+
+			if("for sale".equalsIgnoreCase(sku.getInventoryStatus()))
+			{
+				isSoldOut = false;
+
+				String color = getAttribute(sku.getAttributes(), "color");
+				if(color != null)
+				{
+					colors.add(color);
+				}
+				String size = getAttribute(sku.getAttributes(), "size");
+				if(size != null)
+				{
+					sizes.add(size);
+				}
+			}
+			if("reserved".equalsIgnoreCase(sku.getInventoryStatus()))
+			{
+				isSoldOut = false;
+			}
 		}
+
+		pd.setSoldOut(isSoldOut);
+		pd.setSizes(sizes);
+		pd.setColors(colors);
+	}
+
+	private static String getAttribute(List<Attribute> attributes, String attributeName)
+	{
+		if(attributes == null)
+		{
+			return null;
+		}
+
+		for(Attribute att : attributes)
+		{
+			if(attributeName.equalsIgnoreCase(att.getName()))
+			{
+				return att.getValue();
+			}
+		}
+
+		return null;
 	}
 
 	private static final String SMALL_IMAGE_SIZE = "91x121";
@@ -216,5 +267,47 @@ public class ProductDetails {
 		this.id = id;
 	}
 
+	/**
+	 * @return the isSoldOut
+	 */
+	public boolean isSoldOut() {
+		return isSoldOut;
+	}
 
+	/**
+	 * @param isSoldOut the isSoldOut to set
+	 */
+	public void setSoldOut(boolean isSoldOut) {
+		this.isSoldOut = isSoldOut;
+	}
+
+
+	/**
+	 *
+	 * @param other
+	 * @return evaluation
+	 */
+	@Override
+	public int compareTo(ProductDetails other) {
+
+		if(other == null)
+		{
+			return -1;
+		}
+
+		if(other.isSoldOut() && !this.isSoldOut)
+		{
+			return -1;
+		}
+
+		Double minPrice = Double.parseDouble(this.minPrice);
+		Double otherMinPrice = Double.parseDouble(other.getMinPrice());
+
+		int diff = minPrice.compareTo(otherMinPrice);
+		if(diff != 0){
+			return diff;
+		}
+
+		return this.brand.compareTo(other.getBrand());
+	}
 }

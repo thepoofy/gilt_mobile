@@ -4,6 +4,7 @@
 package com.thepoofy.gilt.servlet;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -15,6 +16,7 @@ import com.thepoofy.gilt.GiltProperty;
 import com.thepoofy.gilt.api.DataSingleton;
 import com.thepoofy.gilt.api.GiltDao;
 import com.thepoofy.gilt.api.SaleMemcache;
+import com.thepoofy.gilt.model.ProductDetails;
 import com.williamvanderhoef.gilt.model.Sale;
 
 /**
@@ -41,7 +43,11 @@ public class ProductsServlet extends ServletBase
 
 			GiltDao dao = new GiltDao(sales);
 
-			doResponse(dao.getCategoryBuckets(category), response);
+			List<ProductDetails> products = dao.getCategoryBuckets(category);
+
+			Collections.sort(products);
+
+			doResponse(products, response);
 		}
 		catch(Throwable t)
 		{
