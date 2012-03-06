@@ -3,17 +3,32 @@ package com.thepoofy.util;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+/**
+ *
+ * @author wvanderhoef
+ *
+ */
 public class KeyValuePair
 {
-	public String key;
-	public String value;
+	private final String key;
+	private final String value;
 
+	/**
+	 *
+	 * @param key
+	 * @param value
+	 */
 	public KeyValuePair(String key, String value)
 	{
 		this.key = key;
 		this.value = value;
 	}
 
+	/**
+	 *
+	 * @param key
+	 * @param pairs
+	 */
 	public KeyValuePair(String key, KeyValuePair... pairs)
 	{
 		this.key = key;
@@ -33,4 +48,20 @@ public class KeyValuePair
 		}
 		this.value = sb.toString();
 	}
+
+	/**
+	 * @return the key
+	 */
+	public String getKey() {
+		return key;
+	}
+
+	/**
+	 * @return the value
+	 */
+	public String getValue() {
+		return value;
+	}
+
+
 }

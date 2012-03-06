@@ -50,6 +50,7 @@ public abstract class AbstractMemcache<K,V>
 	 * @param key
 	 * @return Product
 	 */
+	@SuppressWarnings("unchecked")
 	public V getLatest(K key)
 	{
 		//save us from a Memcache hit if this instance has already fetched data

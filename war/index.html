@@ -76,7 +76,7 @@
     {
     	$.mobile.loadingMessage = "Loading categories for today's sales.";
 		$.mobile.showPageLoadingMsg();
-    	
+		
 		if(site != null)
 		{
 			$("#searchSite").val(site);
@@ -132,6 +132,8 @@
     {
     	$.mobile.loadingMessage = "Loading products for "+category;
 		$.mobile.showPageLoadingMsg();
+		
+		$.mobile.filterPlaceholder = "Search by brand, size, or color";
 		
 		$("#searchCategory").val(category);
 		

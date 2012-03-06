@@ -1,13 +1,8 @@
 package com.thepoofy.util;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,27 +28,12 @@ public class URLUtil
 
 
 
-	private static String processStream(InputStream is) throws IOException
-	{
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-
-
-		StringBuilder sb = new StringBuilder();
-		while (reader.ready())
-		{
-			sb.append(reader.readLine());
-		}
-
-		reader.close();
-
-		return sb.toString();
-	}
-
 
 
 	/**
 	 * Takes advantage of the Googe App Engine Fetch Service
 	 * @param uri
+	 * @param method
 	 * @return NULL if a problem occurs
 	 */
 	public static String loadPage(String uri, HTTPMethod method)
@@ -91,7 +71,7 @@ public class URLUtil
 	 *
 	 * @param address
 	 * @param params
-	 * @return
+	 * @return response
 	 */
 	public static String doPost(String address, List<KeyValuePair>params){
 		try
@@ -112,46 +92,69 @@ public class URLUtil
 	 * @param params
 	 * @return
 	 */
-	public static String doStandalonePost(String address, List<KeyValuePair>params)
-	{
-		try
-		{
-			// Send data
-			URL url = new URL(address);
-			URLConnection conn = url.openConnection();
-			conn.setDoOutput(true);
-			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(conn.getOutputStream());
-			outputStreamWriter.write(createParamString(params));
-			outputStreamWriter.flush();
+//	public static String doStandalonePost(String address, List<KeyValuePair>params)
+//	{
+//		try
+//		{
+//			// Send data
+//			URL url = new URL(address);
+//			URLConnection conn = url.openConnection();
+//			conn.setDoOutput(true);
+//			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(conn.getOutputStream());
+//			outputStreamWriter.write(createParamString(params));
+//			outputStreamWriter.flush();
+//
+//			// Get the response
+//			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+//
+//			StringBuilder sb = new StringBuilder();
+//
+//			while(br.ready())
+//			{
+//				sb.append(br.readLine());
+//			}
+//
+//			outputStreamWriter.close();
+//			br.close();
+//
+//			return sb.toString();
+//
+//		}
+//		catch (IOException e)
+//		{
+//			log.log(Level.SEVERE, e.getMessage(), e);
+//		}
+//		return null;
+//	}
 
-			// Get the response
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+//	/**
+//	 *
+//	 * @param is
+//	 * @return
+//	 * @throws IOException
+//	 */
+//	private static String processStream(InputStream is) throws IOException
+//	{
+//		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+//
+//
+//		StringBuilder sb = new StringBuilder();
+//		while (reader.ready())
+//		{
+//			sb.append(reader.readLine());
+//		}
+//
+//		reader.close();
+//
+//		return sb.toString();
+//	}
 
-			StringBuilder sb = new StringBuilder();
-
-			while(br.ready())
-			{
-				sb.append(br.readLine());
-			}
-
-			outputStreamWriter.close();
-			br.close();
-
-			return sb.toString();
-
-		}
-		catch (IOException e)
-		{
-			log.log(Level.SEVERE, e.getMessage(), e);
-		}
-		return null;
-	}
 
 	/**
 	 *
 	 * @param address
 	 * @param params
-	 * @return
+	 * @return response
 	 */
 	public static synchronized String doGet(String address, List<KeyValuePair>params) {
 		try
@@ -172,36 +175,36 @@ public class URLUtil
 	 * @param params
 	 * @return
 	 */
-	public static String doStandaloneGet(String address, List<KeyValuePair>params)
-	{
-		try
-		{
-			// Send data
-			URL url = new URL(address+"?"+createParamString(params));
-//			System.out.println(url.toExternalForm());
-			URLConnection conn = url.openConnection();
-
-			// Get the response
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-			StringBuilder sb = new StringBuilder();
-
-			while(br.ready())
-			{
-				sb.append(br.readLine());
-			}
-
-			br.close();
-
-			return sb.toString();
-
-		}
-		catch (Exception e)
-		{
-			log.log(Level.SEVERE, e.getMessage(), e);
-		}
-		return null;
-	}
+//	public static String doStandaloneGet(String address, List<KeyValuePair>params)
+//	{
+//		try
+//		{
+//			// Send data
+//			URL url = new URL(address+"?"+createParamString(params));
+////			System.out.println(url.toExternalForm());
+//			URLConnection conn = url.openConnection();
+//
+//			// Get the response
+//			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+//
+//			StringBuilder sb = new StringBuilder();
+//
+//			while(br.ready())
+//			{
+//				sb.append(br.readLine());
+//			}
+//
+//			br.close();
+//
+//			return sb.toString();
+//
+//		}
+//		catch (Exception e)
+//		{
+//			log.log(Level.SEVERE, e.getMessage(), e);
+//		}
+//		return null;
+//	}
 
 
 	private static String createParamString(List<KeyValuePair> params)
@@ -210,9 +213,9 @@ public class URLUtil
 		for(KeyValuePair param : params)
 		{
 			try{
-				data.append(URLEncoder.encode(param.key, "UTF-8"))
+				data.append(URLEncoder.encode(param.getKey(), "UTF-8"))
 				.append("=")
-				.append(URLEncoder.encode(param.value, "UTF-8"))
+				.append(URLEncoder.encode(param.getValue(), "UTF-8"))
 				.append("&");
 			}
 			catch(UnsupportedEncodingException uee)
@@ -227,7 +230,7 @@ public class URLUtil
 	/**
 	 *
 	 * @param parameters
-	 * @return
+	 * @return pairs
 	 */
 	public static List<KeyValuePair> convertToKeyValuePair(Map<String, String>parameters)
 	{

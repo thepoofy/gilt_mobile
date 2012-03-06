@@ -25,6 +25,10 @@ public class SaleMemcache
 
 	private static final Logger log = Logger.getLogger(SaleMemcache.class.getName());
 
+	/**
+	 *
+	 * @return sales
+	 */
 	public Collection<SalesResponse> getCache()
 	{
 		return saleMap.values();

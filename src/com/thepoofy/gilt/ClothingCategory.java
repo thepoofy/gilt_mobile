@@ -29,16 +29,14 @@ public enum ClothingCategory {
 	CARDIGAN("Cardigans"),
 	HOODIE("Hoodies"),
 	VEST("Vests"),
-	HENLEY("Henleys"),
-	SHIRT("Shirts","shirt","workshirt","rugby", "pullover","button up"),
+	SHIRT("Shirts","shirt","workshirt","rugby", "pullover","button up","crewneck","henley","button down"),
 	SCARF("Scarves","scarf","scarves"),
 
-
-	BOARDSHORTS("Boardshorts"),
-	SHORTS("Shorts","shorts","short"),
+	UNDERWEAR("Underwear","boxers","briefs"),
 	PANTS("Pants","pants","pant","chino","chinos","capri"),
 	TROUSERS("Trousers","trouser","trousers"),
-	LEGGING("Leggings","legging","leggings","tights","tight"),
+	LEGGING("Leggings","legging","leggings"),
+	TIGHT("Tights","tights","tight"),
 	SKIRTS("Skirts","skirt"),
 	JEANS("Jeans","jean","jeans","bootcut","boot cut"),
 
@@ -47,7 +45,7 @@ public enum ClothingCategory {
 	SHOES("Shoes","shoe","shoes"),
 	BOOTS("Boots","boot","boots"),
 	SNEAKERS("Sneakers","sneaker","sneakers","trainer"),
-	OXFORDS("Oxfords"),
+	DRESS_SHOES("Dress Shoes","oxfords","wingtips","bucks","loafers"),
 	FOOTWEAR("Footwear","heel","pump","wedge","sandal","flat","slingback","bootie","slip ons", "moccasins"),
 
 	NECKLACE("Necklaces"),
@@ -61,17 +59,17 @@ public enum ClothingCategory {
 
 	DRESS("Dresses","dress", "frock", "shift","maxi","mini","sheath"),
 
-	COAT("Coats", "coat", "anorak", "parka", "overcoats", "trench","jacket", "peacoat", "raincoat", "windbreaker", "bomber"),
+	COAT("Coats", "coat", "anorak", "parka", "overcoats", "trench","jacket", "peacoat", "raincoat", "windbreaker", "bomber", "rain slicker"),
 	CAPE("Capes","cape","capes"),
 	HAT("Caps", "cap","hat"),
 	INTIMATES("Intimates","babydoll","lingerie"),
-
+	SHORTS("Shorts","shorts","short","boardshorts", "swim trunks"),
 
 	WATCH("Watches"),
 	BELT("Belts","belt"),
 	TIE("Ties","tie","bow","bowtie"),
 
-	TOP("Tops","top","tank","tunic","cami","wrap","crewneck","camisole"),
+	TOP("Tops","top","tank","tunic","cami","wrap","camisole"),
 
 	BLANKET("Blankets"),
 	UMBRELLA("Umbrellas"),
