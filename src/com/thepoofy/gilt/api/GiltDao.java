@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.thepoofy.gilt.model.BrandCount;
 import com.thepoofy.gilt.model.CategoryCount;
 import com.thepoofy.gilt.model.ProductDetails;
 import com.williamvanderhoef.gilt.model.Product;
@@ -25,7 +24,7 @@ import com.williamvanderhoef.gilt.model.Sale;
  */
 public class GiltDao {
 
-	private static final Logger log = Logger.getLogger(GiltDao.class.getName());
+//	private static final Logger log = Logger.getLogger(GiltDao.class.getName());
 
 //	private List<BrandCount> brandsCount;
 	private List<CategoryCount> categoriesCount;
@@ -64,7 +63,7 @@ public class GiltDao {
 			return;
 		}
 
-		log.info("Found "+sales.size()+ " sales");
+//		log.info("Found "+sales.size()+ " sales");
 
 		for(Sale s : sales)
 		{
@@ -73,7 +72,7 @@ public class GiltDao {
 
 			if(productUrls != null)
 			{
-				log.info("Sale: "+s.getName()+ " has "+productUrls.size()+" products.");
+//				log.info("Sale: "+s.getName()+ " has "+productUrls.size()+" products.");
 
 				for(String productUrl : productUrls)
 				{
@@ -94,6 +93,7 @@ public class GiltDao {
 			}
 			else
 			{
+			    Logger log = Logger.getLogger(GiltDao.class.getName());
 				log.info("Sale: "+s.getName()+ " has no products.");
 			}
 
@@ -179,6 +179,7 @@ public class GiltDao {
 		}
 		catch(ParseException e)
 		{
+		    Logger log = Logger.getLogger(GiltDao.class.getName());
 			log.log(Level.WARNING, e.getMessage(), e);
 		}
 

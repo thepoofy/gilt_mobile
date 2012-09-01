@@ -40,7 +40,7 @@ public abstract class ServletBase extends HttpServlet
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.writeValue(response.getWriter(), results);
 
-			log.info(mapper.writeValueAsString(o));
+//			log.info(mapper.writeValueAsString(o));
 
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application/json");
