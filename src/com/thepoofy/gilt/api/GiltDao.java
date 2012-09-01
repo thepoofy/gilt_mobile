@@ -5,14 +5,13 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.thepoofy.gilt.ClothingCategory;
 import com.thepoofy.gilt.model.BrandCount;
 import com.thepoofy.gilt.model.CategoryCount;
 import com.thepoofy.gilt.model.ProductDetails;
@@ -28,9 +27,9 @@ public class GiltDao {
 
 	private static final Logger log = Logger.getLogger(GiltDao.class.getName());
 
-	private List<BrandCount> brandsCount;
+//	private List<BrandCount> brandsCount;
 	private List<CategoryCount> categoriesCount;
-	private final Map<ClothingCategory, List<ProductDetails>> categoryBuckets;
+	private final Map<String, List<ProductDetails>> categoryBuckets;
 
 	/**
 	 *
@@ -38,11 +37,11 @@ public class GiltDao {
 	 */
 	public GiltDao(List<Sale> sales)
 	{
-		categoryBuckets = new EnumMap<ClothingCategory, List<ProductDetails>>(ClothingCategory.class);
+		categoryBuckets = new HashMap<String, List<ProductDetails>>();
 
 		init(sales);
 
-		Collections.sort(brandsCount);
+//		Collections.sort(brandsCount);
 		Collections.sort(categoriesCount);
 	}
 
@@ -50,13 +49,13 @@ public class GiltDao {
 
 	private void init(List<Sale> sales){
 
-		Map<String, BrandCount> brands = new LinkedHashMap<String, BrandCount>();
+		//Map<String, BrandCount> brands = new LinkedHashMap<String, BrandCount>();
 		Map<String, CategoryCount> categories = new LinkedHashMap<String, CategoryCount>();
 
 
 		if(sales == null)
 		{
-			brandsCount = Collections.emptyList();
+//			brandsCount = Collections.emptyList();
 			categoriesCount = Collections.emptyList();
 		}
 
@@ -83,13 +82,12 @@ public class GiltDao {
 					if(p!=null)
 					{
 						ProductDetails pd = ProductDetails.valueOf(p);
-
-
+						
 						if(pd != null)
 						{
 							//brandsLogic(pd, brands);
-
-							categoriesLogic(pd, categories);
+						    
+							categoriesLogic(pd, p.getCategories(), categories);
 						}
 					}
 				}
@@ -101,8 +99,8 @@ public class GiltDao {
 
 		}
 
-		brandsCount = new ArrayList<BrandCount>();
-		brandsCount.addAll(brands.values());
+//		brandsCount = new ArrayList<BrandCount>();
+//		brandsCount.addAll(brands.values());
 
 		categoriesCount = new ArrayList<CategoryCount>();
 		categoriesCount.addAll(categories.values());
@@ -129,40 +127,34 @@ public class GiltDao {
 //		}
 //	}
 
-	private void categoriesLogic(ProductDetails productDetails, Map<String, CategoryCount> categories)
+	private void categoriesLogic(ProductDetails productDetails, List<String> categories, Map<String, CategoryCount> categoryCount)
 	{
-		for(ClothingCategory cat : ClothingCategory.values())
+	    for(String cat : categories)
 		{
-			if((matches(cat.searchText, productDetails.getName())))
-			{
-				addToCategory(categories, cat, productDetails);
-
-				//return here to prevent a product from falling into a catch-all category
-				return;
-			}
+	        //TODO add logic to restrict certain categories here.  
+	        //duplicate and generic categories are annoying.
+	        
+			addToCategory(categoryCount, cat, productDetails);			
 		}
-
-		//the final catch all
-		addToCategory(categories, ClothingCategory.OTHER, productDetails);
 	}
 
 
-	private void addToCategory(Map<String, CategoryCount> categories, ClothingCategory cat, ProductDetails productDetails)
+	private void addToCategory(Map<String, CategoryCount> categories, String category, ProductDetails productDetails)
 	{
 		CategoryCount categoryCount = null;
 
-		if(!categories.containsKey(cat.name))
+		if(!categories.containsKey(category))
 		{
-			categoryCount = new CategoryCount(cat.name, productDetails.getImageUrl());
+			categoryCount = new CategoryCount(category, productDetails.getImageUrl());
 		}
-		else if(categories.containsKey(cat.name))
+		else if(categories.containsKey(category))
 		{
-			categoryCount = categories.get(cat.name);
+			categoryCount = categories.get(category);
 		}
 
 		++categoryCount.count;
 
-		addProductToBucket(cat, productDetails);
+		addProductToBucket(category, productDetails);
 //
 		if(categoryCount.getMinPrice() == null && productDetails.getMinPrice() != null)
 		{
@@ -190,16 +182,16 @@ public class GiltDao {
 			log.log(Level.WARNING, e.getMessage(), e);
 		}
 
-		categories.put(cat.name, categoryCount);
+		categories.put(category, categoryCount);
 	}
 
 
-	private void addProductToBucket(ClothingCategory cat, ProductDetails p)
+	private void addProductToBucket(String category, ProductDetails p)
 	{
 		List<ProductDetails> products ;
-		if(categoryBuckets.containsKey(cat))
+		if(categoryBuckets.containsKey(category))
 		{
-			products = categoryBuckets.get(cat);
+			products = categoryBuckets.get(category);
 		}
 		else
 		{
@@ -208,7 +200,7 @@ public class GiltDao {
 
 		products.add(p);
 
-		categoryBuckets.put(cat, products);
+		categoryBuckets.put(category, products);
 	}
 
 
@@ -239,12 +231,12 @@ public class GiltDao {
 		return false;
 	}
 
-	/**
-	 * @return the brandsCount
-	 */
-	public Collection<BrandCount> getBrandsCount() {
-		return brandsCount;
-	}
+//	/**
+//	 * @return the brandsCount
+//	 */
+//	public Collection<BrandCount> getBrandsCount() {
+//		return brandsCount;
+//	}
 	/**
 	 * @return the categoriesCount
 	 */
@@ -256,7 +248,7 @@ public class GiltDao {
 	 * @param category
 	 * @return list of products
 	 */
-	public List<ProductDetails> getCategoryBuckets(ClothingCategory category) {
+	public List<ProductDetails> getCategoryBuckets(String category) {
 		return categoryBuckets.get(category);
 	}
 }

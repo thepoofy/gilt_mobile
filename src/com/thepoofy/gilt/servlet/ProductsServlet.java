@@ -11,7 +11,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.thepoofy.gilt.ClothingCategory;
 import com.thepoofy.gilt.GiltProperty;
 import com.thepoofy.gilt.api.DataSingleton;
 import com.thepoofy.gilt.api.GiltDao;
@@ -33,10 +32,7 @@ public class ProductsServlet extends ServletBase
 		try
 		{
 			String siteName = getParameter(request, "site", true);
-			String cat = getParameter(request, "category", true);
-
-			//guarantees a category
-			ClothingCategory category = ClothingCategory.find(cat);
+			String category = getParameter(request, "category", true);
 
 			SaleMemcache cache = DataSingleton.INSTANCE.getSaleCache();
 			List<Sale> sales = cache.getLatest(GiltProperty.valueOf(siteName));
