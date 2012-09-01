@@ -29,7 +29,7 @@ public class ProductDetails implements Comparable<ProductDetails>
 	private List<String> colors;
 	private List<String> sizes;
 
-	private boolean isSoldOut;
+	private boolean soldOut;
 
 
 	/**
@@ -271,14 +271,14 @@ public class ProductDetails implements Comparable<ProductDetails>
 	 * @return the isSoldOut
 	 */
 	public boolean isSoldOut() {
-		return isSoldOut;
+		return soldOut;
 	}
 
 	/**
 	 * @param isSoldOut the isSoldOut to set
 	 */
 	public void setSoldOut(boolean isSoldOut) {
-		this.isSoldOut = isSoldOut;
+		this.soldOut = isSoldOut;
 	}
 
 
@@ -295,19 +295,19 @@ public class ProductDetails implements Comparable<ProductDetails>
 			return -1;
 		}
 
-		if(other.isSoldOut() && !this.isSoldOut)
-		{
-			return -1;
-		}
+//		if(!this.soldOut && other.isSoldOut())
+//		{
+//		    return Boolean.valueOf(this.isSoldOut()).compareTo(other.isSoldOut());	
+//		}
 
 		Double minPrice = Double.parseDouble(this.minPrice);
 		Double otherMinPrice = Double.parseDouble(other.getMinPrice());
 
-		int diff = minPrice.compareTo(otherMinPrice);
-		if(diff != 0){
-			return diff;
-		}
-
-		return this.brand.compareTo(other.getBrand());
+		return  minPrice.compareTo(otherMinPrice);
+//		if(diff != 0){
+//			return diff;
+//		}
+//
+//		return this.brand.compareTo(other.getBrand());
 	}
 }

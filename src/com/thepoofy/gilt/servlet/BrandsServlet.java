@@ -36,7 +36,7 @@ public class BrandsServlet extends ServletBase
 
 			GiltDao dao = new GiltDao(sales);
 
-			doResponse(dao.getBrandsCount(), response);
+//			doResponse(dao.getBrandsCount(), response);
 		}
 		catch(Throwable t)
 		{

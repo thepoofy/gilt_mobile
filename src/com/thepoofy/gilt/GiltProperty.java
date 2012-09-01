@@ -7,7 +7,7 @@ public enum GiltProperty {
 
 	WOMEN("women", "Women"),
 	MEN("men", "Men"),
-	//HOME("home", "Home"),
+	HOME("home", "Home"),
 	KIDS("kids", "Children");
 	
 	private final String label;

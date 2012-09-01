@@ -121,7 +121,7 @@
          },
          error: function()
          {
-        	 alert('error');
+        	 //alert('error');
          }
         });
     }
@@ -262,7 +262,7 @@
     {
     	var li = create('li');
     	var anchor = create('a');
-    	anchor.attr('href',product.url);
+    	anchor.attr('href',product.url+"&affid=3635474");
     	
     	anchor.append(create('img')    			
         		.attr('src',product.imageUrl)
@@ -274,7 +274,7 @@
 		contentDiv.append(create('h3').addClass('productBrand').append(createText(product.brand)))
     	contentDiv.append(create('h4').addClass('productName').append(createText(product.name)));
 		
-		if(product.isSoldOut)
+		if(product.soldOut)
 		{
 			contentDiv.append(create('h4').append(createText("Sold Out")));	
 		}
@@ -328,6 +328,19 @@
     	return $("<span>"+text+"</span>");
     }
     
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-34501591-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
 </script>
   </head>
   <body>
